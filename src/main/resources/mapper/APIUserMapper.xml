@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.road_friends.everycar.user.mapper.APIUserMapper">
+    <insert id="save" parameterType="com.road_friends.everycar.user.dto.UserDTO" useGeneratedKeys="true" keyProperty="userNum">
+        INSERT INTO user (user_id, user_name, user_password, user_email, user_phone, user_gender, user_birth, user_address, user_status, enabled)
+        VALUES (#{userId}, #{userName}, #{userPassword}, #{userEmail}, #{userPhone}, #{userGender}, #{userBirth}, #{userAddress}, #{userStatus}, #{enabled})
+    </insert>
+
+    <insert id="insertUserRole">
+        INSERT INTO user_roles (user_id, role_id)
+        VALUES (#{userId}, #{roleId})
+    </insert>
+
+</mapper>
