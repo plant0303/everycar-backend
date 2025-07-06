@@ -13,14 +13,20 @@ public class APIUserService {
     private final PasswordEncoder passwordEncoder;
     private final APIUserMapper APIUserMapper;
 
-    //일반회원가입
+    // 일반 회원가입
     public void signup(UserDTO userDTO) {
-        String encodedPw = passwordEncoder.encode(userDTO.getUserPassword());
+        String rawPw = userDTO.getUserPassword();
+        String encodedPw = passwordEncoder.encode(rawPw);
+
+        System.out.println("암호화 전 비밀번호: " + rawPw);
+        System.out.println("암호화 후 비밀번호: " + encodedPw);
+
         userDTO.setUserPassword(encodedPw);
         userDTO.setEnabled(userDTO.isEnabled());
 
         // 사용자 등록
         APIUserMapper.save(userDTO);
+
         // 권한 등록
         APIUserMapper.insertUserRole(userDTO.getUserNum(), 1);
     }

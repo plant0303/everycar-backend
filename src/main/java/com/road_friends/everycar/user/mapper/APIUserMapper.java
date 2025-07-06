@@ -8,4 +8,5 @@ import org.apache.ibatis.annotations.Param;
 public interface APIUserMapper {
     void save(UserDTO userDTO);
     void insertUserRole(@Param("userId") Long userId, @Param("roleId") int roleId);
+    UserDTO findByUsername(@Param("userId") String userId);
 }
