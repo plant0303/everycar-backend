@@ -11,4 +11,18 @@
         VALUES (#{userId}, #{roleId})
     </insert>
 
+    <select id="findByUsername">
+        SELECT
+        u.user_num as user_num,
+        u.user_id as user_id,
+        u.user_name,
+        u.user_password,
+        u.enabled,
+        r.id as role_id,
+        r.name as role_name
+        FROM user u
+        LEFT JOIN user_roles ur ON u.user_num = ur.user_id
+        LEFT JOIN roles r ON ur.role_id = r.id
+        WHERE u.user_id = #{userId};
+    </select>
 </mapper>

@@ -3,6 +3,7 @@ package com.road_friends.everycar.user.dto;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,4 +20,5 @@ public class UserDTO {
     private String userAddress;
     private int userStatus;
     private boolean enabled;
+    private List<RoleDTO> roles;
 }
