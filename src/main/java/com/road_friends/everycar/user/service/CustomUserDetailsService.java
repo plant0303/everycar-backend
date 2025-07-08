@@ -24,13 +24,19 @@ public class CustomUserDetailsService implements UserDetailsService {
         UserDTO userDTO = apiUserMapper.findByUsername(userId);
         // 예외처리
         if(userDTO == null){
+          System.out.println("해당 ID 없음");
           throw new UsernameNotFoundException("해당 유저를 찾을 수 없습니다: " + userId);
         }
 
+        System.out.println("DB에서 가져온 userId: " + userDTO.getUserId());
+        System.out.println("DB에서 가져온 password: " + userDTO.getUserPassword());
+
         // 권한 생성
-        List<String> roles = userDTO.getRoles().stream().map(RoleDTO::getName).collect(Collectors.toList());
 
         // CustomUserDetails 객체 생성, usernum, id, pw, roles 값 넘겨주기
+        List<String> roles = userDTO.getRoles().stream()
+                .map(RoleDTO::getName) // RoleDto의 이름을 가져오는 방법은 필요에 맞게 수정
+                .collect(Collectors.toList());
         return new CustomUserDetails(userDTO.getUserNum(), userDTO.getUserId(), userDTO.getUserPassword(), roles);
     }
 }
