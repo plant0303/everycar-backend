@@ -23,4 +23,18 @@ public class APIReservationService {
         carListMap.put("cars", availableCars);
         return carListMap;
     }
+
+
+    public Map<String, Object> getCarInfo(int carId) {
+        CarDTO car = APIReservationMapper.getCarById(carId);
+
+        Map<String, Object> carDetail = new HashMap<>();
+        carDetail.put("car", car);
+        return carDetail;
+    }
+
+    public CarDTO getCarById(int carId) {
+        return APIReservationMapper.getCarById(carId);
+    }
+
 }

@@ -2,11 +2,9 @@ package com.road_friends.everycar.reservation.controller;
 
 import com.road_friends.everycar.reservation.service.APIReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -18,7 +16,7 @@ public class APIReservationController {
     @Autowired
     private APIReservationService APIReservationService;
 
-
+    // 예약 가능한 차량 리스트 조회
     @GetMapping("/cars")
     public ResponseEntity<Map<String, Object>> selectCars(@RequestParam String province,
                                                           @RequestParam String district,
@@ -30,5 +28,12 @@ public class APIReservationController {
 
         Map<String, Object> availableCars = APIReservationService.getAvailableCars(province, district, rentalDatetime, returnDatetime);
         return ResponseEntity.ok(availableCars);
+    }
+
+    // 특정 차량 상세 조회
+    @GetMapping("/cars/{carId}")
+    public ResponseEntity<Map<String, Object>> getCarById(@PathVariable("carId") int carId){
+        Map<String, Object> carDetail = APIReservationService.getCarInfo(carId);
+        return carDetail != null ? new ResponseEntity<>(carDetail, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
