@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
-public interface FastReservationMapper {
+public interface APIReservationMapper {
     List<CarDTO> getAvailableCars(@Param("province") String province,
                                   @Param("district") String district,
                                   @Param("rentalDatetime")LocalDateTime rentalDatetime,
