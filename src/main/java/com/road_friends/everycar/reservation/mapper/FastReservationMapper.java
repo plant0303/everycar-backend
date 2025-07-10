@@ -4,10 +4,13 @@ import com.road_friends.everycar.reservation.dto.CarDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
 public interface FastReservationMapper {
     List<CarDTO> getAvailableCars(@Param("province") String province,
-                                  @Param("district") String district);
+                                  @Param("district") String district,
+                                  @Param("rentalDatetime")LocalDateTime rentalDatetime,
+                                  @Param("returnDatetime")LocalDateTime returnDatetime);
 }
