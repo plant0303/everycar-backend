@@ -4,19 +4,30 @@
     <!-- 예약 가능 차량 조회 -->
     <select id="getAvailableCars" resultMap="resultMap">
         SELECT
-        m.model_id, m.model_name, m.model_brand, m.model_category, m.model_seate_num,
-        m.model_transmission, m.model_amount_day, m.model_amount_hour,
-        c.car_id, c.car_year, c.car_fuel, c.car_grade, c.car_options, c.rental_station
+            m.model_id, m.model_name, m.model_brand, m.model_category, m.model_seate_num,
+            m.model_transmission, m.model_amount_day, m.model_amount_hour,
+            c.car_id, c.car_year, c.car_fuel, c.car_grade, c.car_options, c.rental_station
         FROM
-        car c
+            car c
         JOIN
-        model m ON c.model_id = m.model_id  -- 차량 모델 정보 조회
+            model m ON c.model_id = m.model_id
         JOIN
-        parking p ON c.rental_station = p.parking_id  -- 차량의 대여 지점(지역) 조회
+            parking p ON c.rental_station = p.parking_id
         WHERE
-        p.parking_province = #{province}
-        AND p.parking_district = #{district}  -- 선택한 지역 필터링
-        AND c.car_status = 0  -- 사용 가능한 차량만
+            p.parking_province = #{province}
+            AND p.parking_district = #{district}
+            AND c.car_status = 0
+            AND NOT EXISTS (
+                SELECT 1
+                FROM fast_reservation fr
+                WHERE fr.car_id = c.car_id
+                    AND (
+                    (#{rentalDatetime} BETWEEN fr.rental_datetime AND fr.return_datetime)
+                    OR (#{returnDatetime} BETWEEN fr.rental_datetime AND fr.return_datetime)
+                    OR (fr.rental_datetime BETWEEN #{rentalDatetime} AND #{returnDatetime})
+                    )
+        );
+
 
     </select>
 
