@@ -32,8 +32,17 @@ public class APIReservationController {
 
     // 특정 차량 상세 조회
     @GetMapping("/cars/{carId}")
-    public ResponseEntity<Map<String, Object>> getCarById(@PathVariable("carId") int carId){
+    public ResponseEntity<Map<String, Object>> getCarById(@PathVariable("carId") int carId,
+                                                          @RequestParam String rental_datetime,
+                                                          @RequestParam String return_datetime){
+
+        LocalDateTime rentalDatetime = LocalDateTime.parse(rental_datetime);
+        LocalDateTime returnDatetime = LocalDateTime.parse(return_datetime);
         Map<String, Object> carDetail = APIReservationService.getCarInfo(carId);
-        return carDetail != null ? new ResponseEntity<>(carDetail, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(carDetail);
     }
+
+    // 예약 페이지
+
+    // 예약 생성
 }
