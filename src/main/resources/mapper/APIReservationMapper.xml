@@ -58,6 +58,24 @@
         WHERE car_id=#{carId};
     </select>
 
+    <select id="getAllParkingStation" parameterType="int" resultType="com.road_friends.everycar.reservation.dto.ParkingDTO">
+        SELECT p.parking_id, p.parking_name, p.parking_address, p.parking_latitude, p.parking_longtitude
+        FROM parking p
+        JOIN car c ON c.rental_station = p.parking_id
+        WHERE
+        (CASE
+        -- 제주도에서 빌린 경우 → 제주도 주차장만 조회
+        WHEN (SELECT p2.parking_district
+        FROM parking p2
+        JOIN car c2 ON c2.rental_station = p2.parking_id
+        WHERE c2.car_id = #{carId}) = '제주도'
+        THEN p.parking_district = '제주도'
+
+        -- 제주도 외 지역에서 빌린 경우 → 제주도를 제외한 모든 주차장 조회
+        ELSE p.parking_district != '제주도'
+        END)
+    </select>
+
     <resultMap id="resultMap" type="com.road_friends.everycar.reservation.dto.CarDTO">
         <id property="carId" column="car_id"/>
 

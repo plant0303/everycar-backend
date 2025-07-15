@@ -1,12 +1,15 @@
 package com.road_friends.everycar.reservation.controller;
 
+import com.road_friends.everycar.reservation.dto.ParkingDTO;
 import com.road_friends.everycar.reservation.service.APIReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -42,7 +45,15 @@ public class APIReservationController {
         return ResponseEntity.ok(carDetail);
     }
 
-    // 예약 페이지
+    // 예약 옵션 페이지
+    @GetMapping("/reservationCar/{carId}")
+    public ResponseEntity reserveCar(@PathVariable("carId") int carId) {
+        // 반납 가능 장소 조회
+        List<ParkingDTO> parkingList = APIReservationService.getParkingStation(carId);
+        return ResponseEntity.ok(parkingList);
+    }
+
+    // 결제페이지
 
     // 예약 생성
 }

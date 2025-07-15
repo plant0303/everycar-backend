@@ -1,6 +1,7 @@
 package com.road_friends.everycar.reservation.service;
 
 import com.road_friends.everycar.reservation.dto.CarDTO;
+import com.road_friends.everycar.reservation.dto.ParkingDTO;
 import com.road_friends.everycar.reservation.mapper.APIReservationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,5 +92,14 @@ public class APIReservationService {
     public CarDTO getCarById(int carId) {
         return APIReservationMapper.getCarById(carId);
     }
+
+    // 반납 가능 장소 조회
+    public List<ParkingDTO> getParkingStation(int carId) {
+        List<ParkingDTO> parkingList;
+
+        parkingList = APIReservationMapper.getAllParkingStation(carId);
+        return parkingList;
+    }
+
 
 }

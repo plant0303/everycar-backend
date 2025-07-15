@@ -1,6 +1,7 @@
 package com.road_friends.everycar.reservation.mapper;
 
 import com.road_friends.everycar.reservation.dto.CarDTO;
+import com.road_friends.everycar.reservation.dto.ParkingDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,4 +21,6 @@ public interface APIReservationMapper {
     int getAmountHour(int carId);
 
     int getAmountDay(int carId);
+
+    List<ParkingDTO> getAllParkingStation(int carId);
 }
