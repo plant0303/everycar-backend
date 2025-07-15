@@ -16,4 +16,8 @@ public interface APIReservationMapper {
                                   @Param("returnDatetime")LocalDateTime returnDatetime);
 
     CarDTO getCarById(int carId);
+
+    int getAmountHour(int carId);
+
+    int getAmountDay(int carId);
 }
