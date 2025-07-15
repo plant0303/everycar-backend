@@ -38,6 +38,8 @@ public class CarDTO {
     @JsonProperty("rental_station")
     private Integer rentalStation;
 
+    private Long totalPrice;
+
     private ModelDTO model;
 
     private ParkingDTO parking;

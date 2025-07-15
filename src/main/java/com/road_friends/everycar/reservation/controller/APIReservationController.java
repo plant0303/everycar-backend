@@ -32,13 +32,13 @@ public class APIReservationController {
 
     // 특정 차량 상세 조회
     @GetMapping("/cars/{carId}")
-    public ResponseEntity<Map<String, Object>> getCarById(@PathVariable("carId") int carId,
-                                                          @RequestParam String rental_datetime,
-                                                          @RequestParam String return_datetime){
+    public ResponseEntity <Map<String, Object>> getCarById(@PathVariable("carId") int carId,
+                                                           @RequestParam("rental_datetime") String rentalDatetimeStr,
+                                                           @RequestParam("return_datetime") String returnDatetimeStr) {
 
-        LocalDateTime rentalDatetime = LocalDateTime.parse(rental_datetime);
-        LocalDateTime returnDatetime = LocalDateTime.parse(return_datetime);
-        Map<String, Object> carDetail = APIReservationService.getCarInfo(carId);
+        LocalDateTime rentalDatetime = LocalDateTime.parse(rentalDatetimeStr);
+        LocalDateTime returnDatetime = LocalDateTime.parse(returnDatetimeStr);
+        Map<String, Object> carDetail = APIReservationService.getCarInfo(carId, rentalDatetime, returnDatetime);
         return ResponseEntity.ok(carDetail);
     }
 
