@@ -6,6 +6,7 @@
         <result property="userId" column="user_id"/>
         <result property="userPassword" column="user_password"/>
         <result property="enabled" column="enabled"/>
+        <result property="refreshToken" column="refresh_token"/>
 
         <collection property="roles" ofType="com.road_friends.everycar.user.dto.RoleDTO">
             <result property="id" column="role_id"/>
@@ -30,6 +31,7 @@
         u.user_name,
         u.user_password,
         u.enabled,
+        u.refresh_token,
         r.id as role_id,
         r.name as role_name
         FROM user u

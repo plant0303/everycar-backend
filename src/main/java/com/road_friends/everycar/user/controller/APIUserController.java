@@ -71,16 +71,24 @@ public class APIUserController {
     public ResponseEntity<?> refresh(@RequestBody Map<String, String> request) {
         String refreshToken = request.get("refreshToken");
 
-        if (!jwtUtil.validateToken(refreshToken)) {
+        if (refreshToken == null || !jwtUtil.validateToken(refreshToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
         }
 
         String userId = jwtUtil.extractUsername(refreshToken);
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token subject");
+        }
 
-        // ✅ 올바른 방식: 주입된 서비스 통해 접근
         UserDTO user = APIUserService.getUserById(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+        }
 
-        if (user == null || !refreshToken.equals(user.getRefreshToken())) {
+        System.out.println("클라이언트 리프레시 토큰: " + refreshToken);
+        System.out.println("DB 저장된 리프레시 토큰: " + user.getRefreshToken());
+
+        if (!refreshToken.trim().equals(user.getRefreshToken().trim())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token mismatch");
         }
 
@@ -92,5 +100,4 @@ public class APIUserController {
 
         return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
     }
-
 }
