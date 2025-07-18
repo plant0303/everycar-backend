@@ -2,6 +2,7 @@ package com.road_friends.everycar.user.dto;
 
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -21,4 +22,6 @@ public class UserDTO {
     private int userStatus;
     private boolean enabled;
     private List<RoleDTO> roles;
+    private String refreshToken;
+    private Timestamp refreshTokenExpiredAt;
 }

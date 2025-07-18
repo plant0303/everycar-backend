@@ -2,7 +2,9 @@ package com.road_friends.everycar.user.controller;
 
 import com.road_friends.everycar.user.component.CustomUserDetails;
 import com.road_friends.everycar.user.component.JwtUtil;
+import com.road_friends.everycar.user.dto.RoleDTO;
 import com.road_friends.everycar.user.dto.UserDTO;
+import com.road_friends.everycar.user.mapper.APIUserMapper;
 import com.road_friends.everycar.user.service.APIUserService;
 import com.road_friends.everycar.user.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +23,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -44,31 +49,14 @@ public class APIUserController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> user) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
         try {
-            String userId = user.get("userId");
-            String rawPassword = user.get("userPassword");
+            String userId = request.get("userId");
+            String password = request.get("userPassword");
 
-            // DB 사용자 정보 조회 (인증 전에 미리 조회)
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(userId);
+            Map<String, String> tokens = APIUserService.login(userId, password);
+            return ResponseEntity.ok(tokens);
 
-            String encodedPassword = userDetails.getPassword();
-            System.out.println("입력된 비밀번호: " + rawPassword);
-            System.out.println("DB에 저장된 암호화된 비밀번호: " + encodedPassword);
-            System.out.println("비밀번호 일치 여부: " + passwordEncoder.matches(rawPassword, encodedPassword));
-
-            // 이제 인증 시도
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userId, rawPassword)
-            );
-
-            List<String> roles = userDetails.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList());
-            Long userNum = ((CustomUserDetails) userDetails).getUserNum();
-            String token = jwtUtil.generateToken(userDetails.getUsername(), userNum, roles);
-
-            return ResponseEntity.ok(Map.of("token", token));
 
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
@@ -78,4 +66,31 @@ public class APIUserController {
                     .body(Map.of("error", "Internal server error"));
         }
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@RequestBody Map<String, String> request) {
+        String refreshToken = request.get("refreshToken");
+
+        if (!jwtUtil.validateToken(refreshToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+        }
+
+        String userId = jwtUtil.extractUsername(refreshToken);
+
+        // ✅ 올바른 방식: 주입된 서비스 통해 접근
+        UserDTO user = APIUserService.getUserById(userId);
+
+        if (user == null || !refreshToken.equals(user.getRefreshToken())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token mismatch");
+        }
+
+        List<String> roles = user.getRoles().stream()
+                .map(RoleDTO::getName)
+                .collect(Collectors.toList());
+
+        String newAccessToken = jwtUtil.generateToken(user.getUserId(), user.getUserNum(), roles);
+
+        return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
+    }
+
 }
