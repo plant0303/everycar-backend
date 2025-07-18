@@ -72,4 +72,14 @@ public class APIUserService {
         return tokens;
     }
 
+    public void logout(String userId) {
+        UserDTO user = APIUserMapper.findByUsername(userId);
+        if (user == null) {
+            throw new RuntimeException("존재하지 않는 사용자입니다.");
+        }
+
+        // DB에 저장된 리프레시 토큰 제거
+        APIUserMapper.updateRefreshToken(user.getUserNum(), null, null);
+    }
+
 }

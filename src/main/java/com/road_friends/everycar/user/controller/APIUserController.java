@@ -2,6 +2,7 @@ package com.road_friends.everycar.user.controller;
 
 import com.road_friends.everycar.user.component.CustomUserDetails;
 import com.road_friends.everycar.user.component.JwtUtil;
+import com.road_friends.everycar.user.dto.LogoutRequest;
 import com.road_friends.everycar.user.dto.RoleDTO;
 import com.road_friends.everycar.user.dto.UserDTO;
 import com.road_friends.everycar.user.mapper.APIUserMapper;
@@ -99,5 +100,13 @@ public class APIUserController {
         String newAccessToken = jwtUtil.generateToken(user.getUserId(), user.getUserNum(), roles);
 
         return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
+    }
+
+
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody LogoutRequest logoutRequest) {
+        APIUserService.logout(logoutRequest.getUserId());
+        return ResponseEntity.ok("로그아웃 완료");
     }
 }
