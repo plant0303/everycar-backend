@@ -20,8 +20,8 @@ public class ParkingDTO {
     @JsonProperty("parking_latitude")
     private BigDecimal parkingLatitude;
 
-    @JsonProperty("parking_longtitude")
-    private BigDecimal parkingLongtitude;
+    @JsonProperty("parking_longitude")
+    private BigDecimal parkingLongitude;
 
     @JsonProperty("parking_province")
     private String parkingProvince;
