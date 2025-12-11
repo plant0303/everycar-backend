@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.road_friends.everycar.reservation.mapper.APIParkingMapper">
+    <!-- DB 컬럼과 DTO 필드 매핑 (map-underscore-to-camel-case 설정이 없을 경우 필수) -->
+    <resultMap id="ParkingResultMap" type="com.road_friends.everycar.reservation.dto.ParkingDTO">
+        <id property="parkingId" column="parking_id" />
+        <result property="parkingName" column="parking_name" />
+        <result property="parkingAddress" column="parking_address" />
+        <result property="parkingLatitude" column="parking_latitude" />
+        <result property="parkingLongitude" column="parking_longitude" />
+        <result property="parkingProvince" column="parking_province" />
+        <result property="parkingDistrict" column="parking_district" />
+    </resultMap>
+
+    <!-- 지역 검색 쿼리 -->
+    <select id="selectParkingByRegion" resultMap="ParkingResultMap">
+        SELECT
+        parking_id,
+        parking_name,
+        parking_address,
+        parking_latitude,
+        parking_longitude,
+        parking_province,
+        parking_district
+        FROM
+        parking
+        WHERE
+        <!-- 입력받은 region 값이 없으면 전체 조회, 있으면 검색 -->
+        <if test="region != null and region != ''">
+            parking_province LIKE CONCAT('%', #{region}, '%')
+            OR
+            parking_district LIKE CONCAT('%', #{region}, '%')
+        </if>
+    </select>
+
+</mapper>

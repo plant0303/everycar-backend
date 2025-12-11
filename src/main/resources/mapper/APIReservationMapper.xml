@@ -104,7 +104,7 @@
             <result property="parkingName" column="parking_name"/>
             <result property="parkingAddress" column="parking_address"/>
             <result property="parkingLatitude" column="parking_latitude"/>
-            <result property="parkingLongtitude" column="parking_longtitude"/>
+            <result property="parkingLongitude" column="parking_longitude"/>
         </association>
     </resultMap>
 
