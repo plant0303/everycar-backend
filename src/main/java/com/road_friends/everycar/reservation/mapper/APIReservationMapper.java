@@ -11,11 +11,11 @@ import java.util.Map;
 
 @Mapper
 public interface APIReservationMapper {
-    List<CarDTO> getAvailableCars(@Param("province") String province,
-                                  @Param("district") String district,
-                                  @Param("rentalDatetime")LocalDateTime rentalDatetime,
-                                  @Param("returnDatetime")LocalDateTime returnDatetime);
-
+    List<CarDTO> getAvailableCars(
+            @Param("parkingId") Integer parkingId,
+            @Param("rentalDatetime") LocalDateTime rentalDatetime,
+            @Param("returnDatetime") LocalDateTime returnDatetime
+    );
     CarDTO getCarById(int carId);
 
     int getAmountHour(int carId);
