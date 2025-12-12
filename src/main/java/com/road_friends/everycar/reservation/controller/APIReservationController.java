@@ -1,8 +1,11 @@
 package com.road_friends.everycar.reservation.controller;
 
+import com.road_friends.everycar.reservation.dto.CarDTO;
 import com.road_friends.everycar.reservation.dto.ParkingDTO;
 import com.road_friends.everycar.reservation.service.APIReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,16 +24,24 @@ public class APIReservationController {
 
     // 예약 가능한 차량 리스트 조회
     @GetMapping("/cars")
-    public ResponseEntity<Map<String, Object>> selectCars(@RequestParam String province,
-                                                          @RequestParam String district,
-                                                          @RequestParam String rental_datetime,
-                                                          @RequestParam String return_datetime){
-
-        LocalDateTime rentalDatetime = LocalDateTime.parse(rental_datetime);
-        LocalDateTime returnDatetime = LocalDateTime.parse(return_datetime);
-
-        Map<String, Object> availableCars = APIReservationService.getAvailableCars(province, district, rentalDatetime, returnDatetime);
-        return ResponseEntity.ok(availableCars);
+    public ResponseEntity<?> getAvailableCars(
+            @RequestParam("parkingId") Integer parkingId,
+            @RequestParam("rentalDatetime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rentalDatetime,
+            @RequestParam("returnDatetime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime returnDatetime
+    ) {
+        try {
+            List<CarDTO> availableCars = APIReservationService.getAvailableCars(parkingId, rentalDatetime, returnDatetime);
+            return ResponseEntity.ok(availableCars);
+        } catch (IllegalArgumentException e) {
+            // 대여/반납 시간 유효성 오류
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (ConfigDataResourceNotFoundException e) {
+            // 대여 가능한 차량이 없는 경우
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // 기타 서버 오류
+            return new ResponseEntity<>("차량 조회 중 오류가 발생했습니다: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // 특정 차량 상세 조회
