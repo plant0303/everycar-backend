@@ -55,7 +55,7 @@
             m.model_id, m.model_brand, m.model_name, m.model_category,
             m.model_amount_hour, m.model_amount_day,
             m.model_seate_num, m.model_transmission,
-            p.parking_id, p.parking_name, p.parking_address, p.parking_latitude, p.parking_longtitude
+            p.parking_id, p.parking_name, p.parking_address, p.parking_latitude, p.parking_longitude
         FROM car c
             JOIN model m ON c.model_id = m.model_id
             JOIN parking p ON c.rental_station = p.parking_id
@@ -79,7 +79,7 @@
     </select>
 
     <select id="getAllParkingStation" parameterType="int" resultType="com.road_friends.everycar.reservation.dto.ParkingDTO">
-        SELECT p.parking_id, p.parking_name, p.parking_address, p.parking_latitude, p.parking_longtitude
+        SELECT p.parking_id, p.parking_name, p.parking_address, p.parking_latitude, p.parking_longitude
         FROM parking p
         JOIN car c ON c.rental_station = p.parking_id
         WHERE
