@@ -96,6 +96,20 @@
         END)
     </select>
 
+    <select id="findContractDetails" resultMap="ContractDetailMap">
+        SELECT
+        c.car_id, c.car_category, c.car_year, c.car_fuel, c.car_grade,
+        m.model_name, m.model_brand, m.model_amount_day, m.model_amount_hour,
+        p.parking_id, p.parking_name, p.parking_address,
+        u.user_num
+        FROM car c
+        JOIN model m ON c.model_id = m.model_id
+        JOIN parking p ON c.rental_station = p.parking_id
+        JOIN user u ON u.user_num = #{userNum}
+        WHERE c.car_id = #{carId}
+        AND p.parking_id = #{parkingId}
+    </select>
+
     <resultMap id="resultMap" type="com.road_friends.everycar.reservation.dto.CarDTO">
         <id property="carId" column="car_id"/>
 

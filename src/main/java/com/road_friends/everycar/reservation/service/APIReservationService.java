@@ -1,5 +1,6 @@
 package com.road_friends.everycar.reservation.service;
 
+import com.road_friends.everycar.reservation.dto.APIReservationDTO;
 import com.road_friends.everycar.reservation.dto.CarDTO;
 import com.road_friends.everycar.reservation.dto.ParkingDTO;
 import com.road_friends.everycar.reservation.mapper.APIReservationMapper;
@@ -136,5 +137,19 @@ public class APIReservationService {
         return parkingList;
     }
 
+    // 결제페이지
+    public APIReservationDTO getContractDetails(int carId, Long userNum, int parkingId) {
+        // 1. 기본 예약 틀 정보 및 차량/모델/주차장 정보 조회
+        APIReservationDTO dto = APIReservationMapper.findContractDetails(carId, userNum, parkingId);
 
+        // 2. 비즈니스 로직: 최종 금액 계산 (예: 24시간 기준)
+        // 실제로는 rentalDatetime과 returnDatetime의 차이를 계산해야 합니다.
+        if (dto.getCarDto() != null && dto.getCarDto().getModel() != null) {
+            long dayAmount = dto.getCarDto().getModel().getModelAmountDay();
+            long insurance = 12400; // 예시 고정 보험료
+            dto.setTotalPrice(dayAmount + insurance);
+        }
+
+        return dto;
+    }
 }
