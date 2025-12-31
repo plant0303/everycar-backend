@@ -96,11 +96,12 @@
         END)
     </select>
 
-    <select id="findContractDetails" resultMap="ContractDetailMap">
+    <!--    계약서 페이지   -->
+    <select id="findContractDetails" resultMap="APIReservationResultMap">
         SELECT
-        c.car_id, c.car_category, c.car_year, c.car_fuel, c.car_grade,
-        m.model_name, m.model_brand, m.model_amount_day, m.model_amount_hour,
-        p.parking_id, p.parking_name, p.parking_address,
+        c.car_id, c.car_category, c.car_status, c.car_year, c.car_fuel, c.car_grade, c.car_options, c.rental_station,
+        m.model_id, m.model_name, m.model_brand, m.model_category, m.model_seate_num, m.model_transmission, m.model_amount_hour, m.model_amount_day,
+        p.parking_id, p.parking_name, p.parking_address, p.parking_latitude, p.parking_longitude,
         u.user_num
         FROM car c
         JOIN model m ON c.model_id = m.model_id
@@ -140,6 +141,11 @@
             <result property="parkingLatitude" column="parking_latitude"/>
             <result property="parkingLongitude" column="parking_longitude"/>
         </association>
+    </resultMap>
+
+    <resultMap id="APIReservationResultMap" type="com.road_friends.everycar.reservation.dto.APIReservationDTO">
+        <result property="userNum" column="user_num"/>
+        <association property="carDto" resultMap="resultMap" />
     </resultMap>
 
 </mapper>
