@@ -1,5 +1,6 @@
 package com.road_friends.everycar.reservation.controller;
 
+import com.road_friends.everycar.reservation.dto.APIReservationDTO;
 import com.road_friends.everycar.reservation.dto.CarDTO;
 import com.road_friends.everycar.reservation.dto.ParkingDTO;
 import com.road_friends.everycar.reservation.service.APIReservationService;
@@ -66,6 +67,14 @@ public class APIReservationController {
     }
 
     // 결제페이지
+    @GetMapping("/contract-details")
+    public ResponseEntity<APIReservationDTO> getContractDetails(
+            @RequestParam("carId") int carId,
+            @RequestParam("userNum") Long userNum,
+            @RequestParam("parkingId") int parkingId) {
 
+        APIReservationDTO details = APIReservationService.getContractDetails(carId, userNum, parkingId);
+        return ResponseEntity.ok(details);
+    }
     // 예약 생성
 }
