@@ -4,6 +4,7 @@
     <resultMap id="userWithRolesMap" type="com.road_friends.everycar.user.dto.UserDTO">
         <id property="userNum" column="user_num"/>
         <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
         <result property="userPassword" column="user_password"/>
         <result property="enabled" column="enabled"/>
         <result property="refreshToken" column="refresh_token"/>
