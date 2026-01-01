@@ -66,9 +66,9 @@ public class APIUserService {
         Timestamp refreshTokenExpiredAt = new Timestamp(jwtUtil.getExpirationFromToken(refreshToken).getTime());
         APIUserMapper.updateRefreshToken(user.getUserNum(), refreshToken, refreshTokenExpiredAt);
 
-+          Map<String, String> response = new HashMap<>();
+        Map<String, String> response = new HashMap<>();
         response.put("accessToken", accessToken);
-        response.put("refreshToken", refreshToken);
+        response.put("refreshToken",refreshToken);
         response.put("userName", user.getUserName());
         response.put("userId", user.getUserId());
         return response;
