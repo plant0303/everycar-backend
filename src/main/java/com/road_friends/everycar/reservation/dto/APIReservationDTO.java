@@ -2,6 +2,7 @@ package com.road_friends.everycar.reservation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.road_friends.everycar.user.dto.UserDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,10 +19,6 @@ public class APIReservationDTO {
     @JsonProperty("reservation_id")
     private int reservationId;
 
-    // 차량 id
-    @JsonProperty("car_id")
-    private int carId;
-
     // 사용자 번호
     @JsonProperty("user_num")
     private Long userNum;
@@ -36,26 +33,26 @@ public class APIReservationDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime rentalDatetime;
 
-    // 반납위치
-    @JsonProperty("return_location")
-    private int returnLocation;
-
-    // 반납일시
-    @JsonProperty("return_datetime")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime returnDatetime;
-
-    @JsonProperty("fast_reservation_create_at")
-    private Timestamp reservationTime;
-
-    @JsonProperty("rental_state")
-    private Integer rentalState;
+//    // 반납위치
+//    @JsonProperty("return_location")
+//    private int returnLocation;
+//
+//    // 반납일시
+//    @JsonProperty("return_datetime")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    private LocalDateTime returnDatetime;
+//
+//    @JsonProperty("fast_reservation_create_at")
+//    private Timestamp reservationTime;
+//
+//    @JsonProperty("rental_state")
+//    private Integer rentalState;
 
 
     private CarDTO carDto;
     private List<ParkingDTO> parkingList;
-
+    private UserDTO userDto;
     private Long totalPrice;
 
 }
