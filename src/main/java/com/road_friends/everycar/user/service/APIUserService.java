@@ -71,6 +71,7 @@ public class APIUserService {
         response.put("refreshToken",refreshToken);
         response.put("userName", user.getUserName());
         response.put("userId", user.getUserId());
+        response.put("userNum", String.valueOf(user.getUserNum()));
         return response;
     }
 

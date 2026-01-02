@@ -139,15 +139,20 @@ public class APIReservationService {
 
     // 결제페이지
     public APIReservationDTO getContractDetails(int carId, Long userNum, int parkingId) {
-        // 1. 기본 예약 틀 정보 및 차량/모델/주차장 정보 조회
         APIReservationDTO dto = APIReservationMapper.findContractDetails(carId, userNum, parkingId);
 
-        // 2. 비즈니스 로직: 최종 금액 계산 (예: 24시간 기준)
-        // 실제로는 rentalDatetime과 returnDatetime의 차이를 계산해야 합니다.
+        // 예외처리
+        if (dto == null) {
+            throw new RuntimeException("해당 조건(carId: " + carId + ", userNum: " + userNum + ")에 일치하는 예약 정보를 찾을 수 없습니다.");
+        }
+
+        // 비즈니스 로직: 최종 금액 계산
         if (dto.getCarDto() != null && dto.getCarDto().getModel() != null) {
             long dayAmount = dto.getCarDto().getModel().getModelAmountDay();
             long insurance = 12400; // 예시 고정 보험료
             dto.setTotalPrice(dayAmount + insurance);
+        } else {
+            dto.setTotalPrice(0L);
         }
 
         return dto;
