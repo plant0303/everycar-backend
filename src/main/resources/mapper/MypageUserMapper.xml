@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.road_friends.everycar.mypage.mapper.MypageUserMapper">
+
+    <!--    개인정보 조회     -->
+    <select id="findByUserNum" resultType="com.road_friends.everycar.mypage.dto.UserDTO">
+        SELECT
+        u.user_num,
+        u.user_id,
+        u.user_name,
+        u.user_email,
+        u.user_phone,
+        u.user_gender,
+        u.user_birth,
+        u.user_address,
+        u.user_status,
+        -- 라이선스 테이블 조인 컬럼 (DTO 필드명에 맞춰 Alias 설정)
+        l.license_type,
+        l.license_num AS license_number, -- DB는 license_num, DTO는 license_number일 경우
+        l.license_end_date AS license_expiry, -- DB는 license_end_date, DTO는 license_expiry일 경우
+        l.license_birth AS license_birth_check -- 면허증상 생일 (필요시)
+        FROM `user` u
+        LEFT JOIN license l ON u.user_num = l.user_num
+        WHERE u.user_num = #{userNum}
+    </select>
+
+    <!--    개인정보 수정     -->
+    <update id="updateUserBasic">
+        UPDATE user
+        SET
+        user_email = #{userEmail},
+        user_phone = #{userPhone},
+        user_gender = #{userGender},
+        user_birth = #{userBirth},
+        user_address = #{userAddress}
+        WHERE user_num = #{userNum}
+    </update>
+
+
+    <!--    면허증 조회     -->
+    <select id="findLicenseByUserNum" resultType="com.road_friends.everycar.mypage.dto.UserLicenseDTO">
+        SELECT
+        license_id, license_type, license_num, license_birth,
+        license_date, license_end_date, license_region,
+        user_num, license_photo_path, created_at, updated_at
+        FROM license
+        WHERE user_num = #{userNum}
+    </select>
+
+    <!--    면허증 추가      -->
+    <insert id="insertLicense" parameterType="com.road_friends.everycar.mypage.dto.UserLicenseDTO">
+        INSERT INTO license (
+        license_type, license_num, license_birth,
+        license_date, license_end_date, license_region,
+        user_num, license_photo_path
+        ) VALUES (
+        #{licenseType}, #{licenseNum}, #{licenseBirth},
+        #{licenseDate}, #{licenseEndDate}, #{licenseRegion},
+        #{userNum}, #{licensePhotoPath}
+        )
+    </insert>
+
+    <!--    면허증 수정      -->
+    <update id="updateLicense" parameterType="com.road_friends.everycar.mypage.dto.UserLicenseDTO">
+        UPDATE license
+        SET
+        license_type = #{licenseType},
+        license_num = #{licenseNum},
+        license_birth = #{licenseBirth},
+        license_date = #{licenseDate},
+        license_end_date = #{licenseEndDate},
+        license_region = #{licenseRegion},
+        license_photo_path = #{licensePhotoPath}
+        WHERE user_num = #{userNum}
+    </update>
+
+    <delete id="deleteLicense">
+        DELETE FROM license WHERE user_num = #{userNum}
+    </delete>
+</mapper>
