@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/mypage")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class MypageUserController {
     private final MypageUserService mypageUserService;
 
@@ -27,7 +28,7 @@ public class MypageUserController {
         return ResponseEntity.ok("정보가 성공적으로 수정되었습니다.");
     }
 
-    // 면허 정보 저장 (등록/수정 통합)
+    // aa 면허 정보 저장 (등록/수정 통합)
     @PostMapping("/save")
     public ResponseEntity<String> saveLicense(@RequestBody UserLicenseDTO licenseDto) {
         mypageUserService.saveOrUpdateLicense(licenseDto);
