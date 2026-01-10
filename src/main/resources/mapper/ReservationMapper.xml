@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.road_friends.everycar.payment.mapper.ReservationMapper">
+
+    <insert id="insertReservation" parameterType="com.road_friends.everycar.payment.dto.PaymentCheckRequest">
+        INSERT INTO reservations (
+        payment_id,
+        car_id,
+        user_num,
+        rental_date,
+        return_date,
+        total_price,
+        status
+        ) VALUES (
+        #{paymentId},
+        #{carId},
+        #{userNum},
+        #{rentalDatetime},
+        #{returnDatetime},
+        #{totalPrice},
+        'PAID'
+        )
+    </insert>
+
+</mapper>
