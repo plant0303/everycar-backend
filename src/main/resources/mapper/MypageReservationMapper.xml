@@ -22,4 +22,26 @@
         ORDER BY r.created_at desc;
     </select>
 
+    <select id="selectReservationDetail" resultType="com.road_friends.everycar.mypage.dto.ReservationDetailDTO">
+        SELECT
+        r.reservation_id AS reservationId,
+        r.payment_id AS paymentId,
+        r.car_id AS carId,
+        r.user_num AS userNum,
+        DATE_FORMAT(r.rental_date, '%Y-%m-%d %H:%i') AS rentalDate,
+        DATE_FORMAT(r.return_date, '%Y-%m-%d %H:%i') AS returnDate,
+        r.total_price AS totalPrice,
+        r.status AS status,
+        DATE_FORMAT(r.created_at, '%Y-%m-%d %H:%i') AS createdAt,
+        m.model_name AS carName,
+        m.model_brand AS brand,
+        c.car_fuel AS fuel,
+        p.parking_name AS parkingName,
+        p.parking_address AS parkingAddress
+        FROM reservations r
+        JOIN car c ON r.car_id = c.car_id
+        JOIN model m ON c.model_id = m.model_id
+        JOIN parking p ON c.rental_station = p.parking_id
+        WHERE r.reservation_id = #{reservationId}
+    </select>
 </mapper>
