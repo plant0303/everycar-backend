@@ -1,5 +1,6 @@
 package com.road_friends.everycar.mypage.controller;
 
+import com.road_friends.everycar.mypage.dto.ReservationDetailDTO;
 import com.road_friends.everycar.mypage.dto.ReservationResponseDTO;
 import com.road_friends.everycar.mypage.service.MypageReservationService;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,15 @@ public class MypageReservationController {
     public ResponseEntity<List<ReservationResponseDTO>> getReservations(@PathVariable Long userNum) {
         List<ReservationResponseDTO> list = mypageReservationService.getMyReservations(userNum);
         return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/detail/{reservationId}")
+    public ResponseEntity<ReservationDetailDTO> getReservationDetail(@PathVariable Long reservationId) {
+        ReservationDetailDTO detail = mypageReservationService.getReservationDetail(reservationId);
+        if (detail != null) {
+            return ResponseEntity.ok(detail);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
