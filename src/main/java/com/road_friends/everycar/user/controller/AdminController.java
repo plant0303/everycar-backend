@@ -21,10 +21,10 @@ public class AdminController {
         return "admin/login";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboard(Model model, Principal principal) {
-        // Principal을 통해 세션에 저장된 현재 로그인 아이디를 가져올 수 있음
-        model.addAttribute("adminId", principal.getName());
-        return "admin/user/userlist";
-    }
+//    @GetMapping("/dashboard")
+//    public String dashboard(Model model, Principal principal) {
+//        // Principal을 통해 세션에 저장된 현재 로그인 아이디를 가져올 수 있음
+//        model.addAttribute("adminId", principal.getName());
+//        return "admin/user/list";
+//    }
 }

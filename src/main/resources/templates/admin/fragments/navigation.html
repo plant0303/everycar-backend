@@ -2,10 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <nav th:fragment="adminNav" class="admin-sidebar">
   <div class="sidebar-logo">
-    <a th:href="@{/admin/dashboard}">EveryCar Admin</a>
+    <a th:href="@{/admin/users}">
+      <img th:src="@{/images/logo_white.png}" alt="EveryCar Admin" style="max-width: 70%;">
+    </a>
   </div>
   <ul class="nav-menu">
-    <li><a th:href="@{/admin/dashboard}">대시보드</a></li>
     <li><a th:href="@{/admin/users}">회원 관리</a></li>
     <li><a th:href="@{/admin/reservations}">예약 내역</a></li>
     <li><a th:href="@{/admin/cars}">차량 관리</a></li>

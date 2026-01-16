@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+    <title>회원 관리</title>
+    <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
+</head>
+<body>
+<div layout:fragment="content" class="content-body">
+    <table class="admin-table">
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>아이디</th>
+            <th>이름</th>
+            <th>상태</th>
+            <th>관리</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.userNum}"></td>
+            <td th:text="${user.userId}"></td>
+            <td th:text="${user.userName}"></td>
+            <td>
+                    <span th:class="${user.userStatus == 1 ? 'status-badge status-active' : 'status-badge status-stop'}"
+                          th:text="${user.userStatus == 1 ? '정상' : '중지'}"></span>
+            </td>
+            <td>
+                <a th:href="@{/admin/users/edit/{id}(id=${user.userNum})}" class="btn btn-edit">수정</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

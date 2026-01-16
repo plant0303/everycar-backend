@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.road_friends.everycar.admin.user.mapper.AdminUserMapper">
+    <select id="findAllUsers" resultType="com.road_friends.everycar.user.dto.UserDTO">
+        SELECT user_num, user_id, user_name, user_email, user_phone, user_status, enabled
+        FROM user
+        ORDER BY user_num DESC
+    </select>
+
+    <select id="findByUserNum" resultType="com.road_friends.everycar.user.dto.UserDTO">
+        SELECT * FROM user WHERE user_num = #{userNum}
+    </select>
+
+    <update id="updateUser">
+        UPDATE user
+        SET user_name = #{userName},
+        user_email = #{userEmail},
+        user_phone = #{userPhone},
+        user_status = #{userStatus},
+        enabled = #{enabled}
+        WHERE user_num = #{userNum}
+    </update>
+</mapper>

@@ -35,23 +35,24 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/admin/login", "/admin").permitAll()
-                        .requestMatchers("/admin/user/{id}").hasRole("ADMIN")
-                        .requestMatchers("/admin/**").hasAnyRole("ADMIN", "MANAGER")
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/admin/user/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/admin/**").hasAnyRole("ADMIN", "MANAGER")
+//                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/admin/login")
                         .usernameParameter("userId")
                         .passwordParameter("userPassword")
-                        .defaultSuccessUrl("/admin/dashboard", true)
+                        .defaultSuccessUrl("/admin/users", true)
                         .permitAll()
                 )
-                .sessionManagement(session -> session
-                        // 로그인 중복방지, 세션 저장
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 필요시 세션 생성
-                        .invalidSessionUrl("/admin/login") // 세션 만료 시 이동할 페이지
-                        .maximumSessions(1) // 중복 로그인 방지
-                )
+//                .sessionManagement(session -> session
+//                        // 로그인 중복방지, 세션 저장
+//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 필요시 세션 생성
+//                        .invalidSessionUrl("/admin/login") // 세션 만료 시 이동할 페이지
+//                        .maximumSessions(1) // 중복 로그인 방지
+//                )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/admin")
                         .permitAll()
