@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+
+<head>
+    <title>예약 수정</title>
+    <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
+    <link rel="stylesheet" th:href="@{/css/reservation/admin-reservation.css}">
+</head>
+
+<body>
+<div layout:fragment="content" class="content-body">
+    <h2 layout:fragment="pageTitle" style="display:none;">예약 상세 수정</h2>
+
+    <div class="edit-page-flex">
+        <section class="edit-form-section">
+            <h3 style="margin-bottom: 20px;">예약 상태 수정</h3>
+            <form th:action="@{/admin/reservations/update}" th:object="${res}" method="post">
+                <input type="hidden" th:field="*{reservationId}">
+
+                <div class="form-group">
+                    <label>결제 번호 (변경불가)</label>
+                    <input type="text" th:field="*{paymentId}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>예약 상태</label>
+                    <select th:field="*{status}">
+                        <option value="예약">예약</option>
+                        <option value="이용중">이용중</option>
+                        <option value="완료">완료</option>
+                        <option value="취소">취소</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>대여 일시</label>
+                    <input type="datetime-local" th:field="*{rentalDate}">
+                </div>
+
+                <div class="form-group">
+                    <label>반납 일시</label>
+                    <input type="datetime-local" th:field="*{returnDate}">
+                </div>
+
+                <div class="form-group">
+                    <label>총 결제 금액</label>
+                    <input type="number" th:field="*{totalPrice}">
+                </div>
+
+                <div class="btn-area">
+                    <button type="submit" class="btn btn-primary">수정 완료</button>
+                    <a th:href="@{/admin/reservations}" class="btn btn-secondary">목록으로</a>
+                </div>
+            </form>
+        </section>
+
+        <section class="reservation-list-section">
+            <h3>예약 요약 정보</h3>
+            <div style="padding: 10px; line-height: 2;">
+                <p><strong>유저 정보:</strong>
+                    <span th:text="${res.userName}"></span> (<span th:text="${res.userId}"></span>)
+                </p>
+                <p><strong>차량 정보:</strong>
+                    <span th:text="${res.modelBrand}"></span> <span th:text="${res.modelName}"></span>
+                </p>
+                <p><strong>대여 장소:</strong>
+                    <span th:text="${res.parkingName}"></span>
+                </p>
+                <p><strong>예약 생성일:</strong>
+                    <span th:text="${#temporals.format(res.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                </p>
+            </div>
+
+            <div style="margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 5px;">
+                <p style="color: #666; font-size: 0.9em;">
+                    * 예약 상태를 '취소'로 변경하더라도 실제 결제 취소(환불)는 별도의 결제 관리 시스템에서 진행해야 합니다.
+                </p>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>

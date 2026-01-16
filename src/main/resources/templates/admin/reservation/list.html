@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+  <title>회원 관리</title>
+  <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
+  <link rel="stylesheet" th:href="@{/css/reservation/admin-reservation.css}">
+</head>
+<body>
+<h2 layout:fragment="pageTitle">예약 내역 관리</h2>
+<script th:if="${msg}">alert([[${msg}]]);</script>
+
+<section class="content-body" layout:fragment="content">
+<table class="admin-table">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>사용자(ID)</th>
+    <th>차량모델</th>
+    <th>대여장소</th>
+    <th>대여기간</th>
+    <th>상태</th>
+    <th>관리</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="item : ${list}">
+    <td th:text="${item.reservationId}"></td>
+    <td><span th:text="${item.userName}"></span>(<span th:text="${item.userId}"></span>)</td>
+    <td th:text="|${item.modelBrand} ${item.modelName}|"></td>
+    <td th:text="${item.parkingName}"></td>
+    <td>
+      <span th:text="${#temporals.format(item.rentalDate, 'MM/dd HH:mm')}"></span> ~
+      <span th:text="${#temporals.format(item.returnDate, 'MM/dd HH:mm')}"></span>
+    </td>
+    <td>
+      <span th:class="|status-badge status-${item.status}|" th:text="${item.status}"></span>
+    </td>
+    <td>
+      <a th:href="@{/admin/reservations/edit/{id}(id=${item.reservationId})}" class="btn btn-edit">상세/수정</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<div class="pagination">
+  <a th:each="i : ${#numbers.sequence(1, totalPages)}"
+     th:href="@{/admin/reservations(page=${i})}"
+     th:text="${i}" th:classappend="${i == currentPage} ? 'active'"></a>
+</div>
+</section>
+</body>
+</html>

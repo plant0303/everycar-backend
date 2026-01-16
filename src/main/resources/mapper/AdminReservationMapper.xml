@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.road_friends.everycar.admin.reservation.mapper.AdminReservationMapper">
+    <select id="findAll" resultType="com.road_friends.everycar.admin.reservation.dto.ReservationDTO">
+        SELECT
+        r.reservation_id, r.rental_date, r.return_date, r.total_price, r.status,
+        u.user_id, u.user_name,
+        m.model_name, m.model_brand,
+        p.parking_name
+        FROM reservations r
+        JOIN user u ON r.user_num = u.user_num
+        JOIN car c ON r.car_id = c.car_id
+        JOIN model m ON c.model_id = m.model_id
+        JOIN parking p ON c.rental_station = p.parking_id
+        ORDER BY r.reservation_id DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM reservations
+    </select>
+
+    <select id="findById" resultType="com.road_friends.everycar.admin.reservation.dto.ReservationDTO">
+        SELECT r.*, u.user_id, u.user_name, m.model_name
+        FROM reservations r
+        JOIN user u ON r.user_num = u.user_num
+        JOIN car c ON r.car_id = c.car_id
+        JOIN model m ON c.model_id = m.model_id
+        WHERE r.reservation_id = #{reservationId}
+    </select>
+
+    <update id="updateReservation">
+        UPDATE reservations
+        SET status = #{status},
+        rental_date = #{rentalDate},
+        return_date = #{returnDate}
+        WHERE reservation_id = #{reservationId}
+    </update>
+</mapper>
