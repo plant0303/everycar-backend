@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("/admin/users")
 @RequiredArgsConstructor
@@ -17,15 +19,18 @@ public class AdminUserController {
 
     // 회원 목록 페이지
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("users", adminUserService.getAllUsers());
+    public String list(@RequestParam(value = "page", defaultValue = "1") int page,
+                       @RequestParam(value = "keyword", required = false) String keyword,
+                       Model model) {
+        Map<String, Object> result = adminUserService.getUserList(keyword, page);
+        model.addAllAttributes(result);
         return "admin/user/list";
     }
-
     // 회원 수정 폼 페이지
     @GetMapping("/edit/{userNum}")
     public String editForm(@PathVariable Long userNum, Model model) {
         model.addAttribute("user", adminUserService.getUserByNum(userNum));
+        model.addAttribute("reservations", adminUserService.getReservationsByUser(userNum));
         return "admin/user/edit";
     }
 

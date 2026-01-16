@@ -7,7 +7,15 @@
     <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
 </head>
 <body>
+<h2 layout:fragment="pageTitle">회원 관리</h2>
 <div layout:fragment="content" class="content-body">
+    <div class="search-area" style="margin-bottom: 20px;">
+        <form th:action="@{/admin/users}" method="get">
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="아이디 검색">
+            <button type="submit" class="btn btn-edit">검색</button>
+            <a th:href="@{/admin/users}" class="btn">초기화</a>
+        </form>
+    </div>
     <table class="admin-table">
         <thead>
         <tr>
@@ -33,6 +41,14 @@
         </tr>
         </tbody>
     </table>
+    <div class="pagination" style="margin-top: 20px; text-align: center;">
+        <span th:each="i : ${#numbers.sequence(1, totalPages > 0 ? totalPages : 1)}">
+            <a th:href="@{/admin/users(page=${i}, keyword=${keyword})}"
+               th:text="${i}"
+               th:style="${i == currentPage ? 'font-weight: bold; color: blue; margin: 0 5px;' : 'margin: 0 5px;'}">
+            </a>
+        </span>
+    </div>
 </div>
 </body>
 </html>

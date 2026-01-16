@@ -1,14 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.road_friends.everycar.admin.user.mapper.AdminUserMapper">
+    <resultMap id="ReservationMap" type="com.road_friends.everycar.admin.user.dto.ReservationViewDTO">
+        <id property="reservationId" column="reservation_id" />
+        <result property="rentalDate" column="rental_date" />
+        <result property="returnDate" column="return_date" />
+        <result property="totalPrice" column="total_price" />
+        <result property="status" column="status" />
+        <result property="parkingName" column="parking_name" />
+        <result property="carModel" column="car_model" />
+    </resultMap>
+
     <select id="findAllUsers" resultType="com.road_friends.everycar.user.dto.UserDTO">
         SELECT user_num, user_id, user_name, user_email, user_phone, user_status, enabled
         FROM user
+        <where>
+            <if test="keyword != null and keyword != ''">
+                user_id LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
         ORDER BY user_num DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="countUsers" resultType="int">
+        SELECT COUNT(*) FROM user
+        <where>
+            <if test="keyword != null and keyword != ''">
+                user_id LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
     </select>
 
     <select id="findByUserNum" resultType="com.road_friends.everycar.user.dto.UserDTO">
         SELECT * FROM user WHERE user_num = #{userNum}
+    </select>
+
+    <select id="findReservationsByUserNum" resultMap="ReservationMap">
+        SELECT
+        r.reservation_id,
+        r.rental_date,
+        r.return_date,
+        r.total_price,
+        r.status,
+        p.parking_name,
+        c.model_id AS car_model
+        FROM reservations r
+        JOIN car c ON r.car_id = c.car_id
+        JOIN parking p ON c.rental_station = p.parking_id
+        WHERE r.user_num = #{userNum}
+        ORDER BY r.rental_date DESC
     </select>
 
     <update id="updateUser">
