@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+  <title>EveryCar Admin</title>
+  <link rel="stylesheet" th:href="@{/css/admin-layout.css}">
+  <th:block layout:fragment="css"></th:block>
+</head>
+<body>
+<div class="admin-wrapper">
+  <nav th:replace="~{admin/fragments/navigation :: adminNav}"></nav>
+
+  <main class="admin-content">
+    <header class="content-header">
+      <h2 layout:fragment="pageTitle">페이지 제목</h2>
+      <div class="admin-profile">
+        <span th:text="${#authentication.name}">관리자명</span>님 접속중
+      </div>
+    </header>
+
+    <section class="content-body" layout:fragment="content">
+    </section>
+  </main>
+</div>
+
+<th:block layout:fragment="script"></th:block>
+</body>
+</html>

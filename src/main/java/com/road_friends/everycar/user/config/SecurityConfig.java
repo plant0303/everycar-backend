@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +32,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/admin/login", "/admin").permitAll()
                         .requestMatchers("/admin/user/{id}").hasRole("ADMIN")
@@ -43,6 +45,12 @@ public class SecurityConfig {
                         .passwordParameter("userPassword")
                         .defaultSuccessUrl("/admin/dashboard", true)
                         .permitAll()
+                )
+                .sessionManagement(session -> session
+                        // 로그인 중복방지, 세션 저장
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 필요시 세션 생성
+                        .invalidSessionUrl("/admin/login") // 세션 만료 시 이동할 페이지
+                        .maximumSessions(1) // 중복 로그인 방지
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/admin")
