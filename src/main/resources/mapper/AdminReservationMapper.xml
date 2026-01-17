@@ -12,12 +12,30 @@
         JOIN car c ON r.car_id = c.car_id
         JOIN model m ON c.model_id = m.model_id
         JOIN parking p ON c.rental_station = p.parking_id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND u.user_id LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="filterStatus != null and filterStatus != ''">
+                AND r.status = #{filterStatus}
+            </if>
+        </where>
         ORDER BY r.reservation_id DESC
         LIMIT #{size} OFFSET #{offset}
     </select>
 
     <select id="countAll" resultType="int">
-        SELECT COUNT(*) FROM reservations
+        SELECT COUNT(*)
+        FROM reservations r
+        JOIN user u ON r.user_num = u.user_num
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND u.user_id LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="filterStatus != null and filterStatus != ''">
+                AND r.status = #{filterStatus}
+            </if>
+        </where>
     </select>
 
     <select id="findById" resultType="com.road_friends.everycar.admin.reservation.dto.ReservationDTO">

@@ -9,10 +9,13 @@ import java.util.List;
 @Mapper
 public interface AdminReservationMapper {
     // 페이징 처리된 예약 목록 조회
-    List<ReservationDTO> findAll(@Param("offset") int offset, @Param("size") int size);
-
+    List<ReservationDTO> findAll(@Param("offset") int offset,
+                                 @Param("size") int size,
+                                 @Param("keyword") String keyword,
+                                 @Param("filterStatus") String filterStatus);
     // 전체 예약 수 조회
-    int countAll();
+    int countAll(@Param("keyword") String keyword,
+                 @Param("filterStatus") String filterStatus);
 
     // 예약 단건 조회 (수정 폼용)
     ReservationDTO findById(Long reservationId);

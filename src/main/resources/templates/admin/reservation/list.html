@@ -12,6 +12,22 @@
 <script th:if="${msg}">alert([[${msg}]]);</script>
 
 <section class="content-body" layout:fragment="content">
+  <div class="search-filter-container" style="margin-bottom: 20px; display: flex; gap: 10px;">
+    <form th:action="@{/admin/reservations}" method="get" style="display: flex; gap: 10px; width: 50%;">
+      <select name="filterStatus" class="form-control" style="width: 150px;">
+        <option value="">모든 상태</option>
+        <option value="PAID" th:selected="${filterStatus == 'PAID'}">PAID</option>
+        <option value="이용중" th:selected="${filterStatus == '이용중'}">이용중</option>
+        <option value="완료" th:selected="${filterStatus == '완료'}">완료</option>
+        <option value="취소" th:selected="${filterStatus == '취소'}">취소</option>
+      </select>
+
+      <input type="text" name="keyword" th:value="${keyword}" placeholder="사용자 아이디 검색" class="form-control" style="width: 250px;">
+
+      <button type="submit" class="btn btn-primary">검색</button>
+      <a th:href="@{/admin/reservations}" class="btn btn-secondary">초기화</a>
+    </form>
+  </div>
 <table class="admin-table">
   <thead>
   <tr>

@@ -15,8 +15,11 @@ public class AdminReservationController {
     private final AdminReservationService reservationService;
 
     @GetMapping
-    public String list(@RequestParam(value="page", defaultValue="1") int page, Model model) {
-        model.addAllAttributes(reservationService.getReservationList(page));
+    public String list(@RequestParam(value="page", defaultValue="1") int page,
+                       @RequestParam(value="keyword", required=false) String keyword,
+                       @RequestParam(value="filterStatus", required=false) String filterStatus,
+                       Model model) {
+        model.addAllAttributes(reservationService.getReservationList(page, keyword, filterStatus));
         return "admin/reservation/list";
     }
 

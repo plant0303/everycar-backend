@@ -15,18 +15,20 @@ import java.util.Map;
 public class AdminReservationService {
     private final AdminReservationMapper reservationMapper;
 
-    public Map<String, Object> getReservationList(int page) {
+    public Map<String, Object> getReservationList(int page, String keyword, String filterStatus) {
         int size = 10;
         int offset = (page - 1) * size;
 
-        List<ReservationDTO> list = reservationMapper.findAll(offset, size);
-        int totalCount = reservationMapper.countAll();
+        List<ReservationDTO> list = reservationMapper.findAll(offset, size, keyword, filterStatus);
+        int totalCount = reservationMapper.countAll(keyword, filterStatus);
         int totalPages = (int) Math.ceil((double) totalCount / size);
 
         Map<String, Object> res = new HashMap<>();
         res.put("list", list);
         res.put("currentPage", page);
         res.put("totalPages", totalPages);
+        res.put("keyword", keyword);
+        res.put("filterStatus", filterStatus); // 뷰에서 상태를 유지하기 위해 추가
         return res;
     }
 
