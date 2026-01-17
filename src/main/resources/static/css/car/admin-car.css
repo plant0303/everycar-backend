@@ -1,0 +1,86 @@
+.status-car-0 { background: #e3f2fd; color: #1976d2; } /* 대여가능 - 파랑 */
+.status-car-1 { background: #fff3e0; color: #f57c00; } /* 대여중 - 주황 */
+.status-car-2 { background: #ffebee; color: #d32f2f; } /* 점검중 - 빨강 */
+
+.flex-form { display: flex; gap: 10px; margin-bottom: 20px; }
+.flex-form input, .flex-form select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+
+/* 대여 정보 박스 */
+.info-box {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    background-color: #e1f5fe;
+    border: 1px solid #b3e5fc;
+    color: #01579b;
+    font-size: 14px;
+}
+
+/* 라디오 버튼 그룹 */
+.radio-group {
+    display: flex;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.radio-group label {
+    display: inline !important;
+    font-weight: normal !important;
+    margin-left: 5px;
+}
+
+/* 셀렉트 박스 스타일 */
+select.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+/* 페이지네이션 */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    gap: 5px;
+}
+
+.page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    text-decoration: none;
+    color: #444;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.page-link:hover {
+    background-color: #f8f9fa;
+    border-color: #3498db;
+    color: #3498db;
+}
+
+.page-link.active {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+    font-weight: bold;
+}
+
+/* 처음/끝 기호 강조 */
+.page-link:first-child, .page-link:last-child {
+    font-weight: bold;
+    background-color: #eee;
+}

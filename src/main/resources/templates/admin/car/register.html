@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+  <title>회원 관리</title>
+  <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
+  <link rel="stylesheet" th:href="@{/css/car/admin-car.css}">
+</head>
+<body>
+<h2 layout:fragment="pageTitle">차량 신규 등록</h2>
+<div layout:fragment="content" class="content-body">
+  <h2 layout:fragment="pageTitle">신규 차량 등록</h2>
+
+  <div class="edit-page-flex">
+    <section class="edit-form-section">
+      <form th:action="@{/admin/cars/register}" th:object="${car}" method="post">
+        <div class="form-group">
+          <label>모델 ID (예: avante_cn7)</label>
+          <input type="text" th:field="*{modelId}" required>
+        </div>
+
+        <div class="form-group">
+          <label>차량 분류</label>
+          <select th:field="*{carCategory}">
+            <option value="1">경차</option>
+            <option value="2">준중형</option>
+            <option value="3">중형</option>
+            <option value="4">대형</option>
+            <option value="5">SUV</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>차량 연식 (숫자)</label>
+          <input type="number" th:field="*{carYear}" placeholder="2024">
+        </div>
+
+        <div class="form-group">
+          <label>연료 타입</label>
+          <select th:field="*{carFuel}">
+            <option value="가솔린">가솔린</option>
+            <option value="디젤">디젤</option>
+            <option value="전기">전기</option>
+            <option value="하이브리드">하이브리드</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>차량 등급</label>
+          <input type="text" th:field="*{carGrade}" placeholder="프레스티지, 노블레스 등">
+        </div>
+
+        <div class="form-group">
+          <label>옵션 정보</label>
+          <input type="text" th:field="*{carOptions}" placeholder="썬루프, 네비게이션 등">
+        </div>
+
+        <div class="form-group">
+          <label>배치 주차장 ID (Parking ID)</label>
+          <input type="number" th:field="*{rentalStation}" required>
+        </div>
+
+        <div class="btn-area">
+          <button type="submit" class="btn btn-primary">차량 등록</button>
+          <a th:href="@{/admin/cars}" class="btn btn-secondary">취소</a>
+        </div>
+      </form>
+    </section>
+
+    <section class="reservation-list-section">
+      <h3>등록 가이드</h3>
+      <div style="padding: 10px; line-height: 1.6; color: #666;">
+        <p>1. <strong>모델 ID</strong>는 정확한 값을 입력해야 사진과 제원이 연동됩니다.</p>
+        <p>2. <strong>주차장 ID</strong>는 현재 존재하는 주차장 번호를 입력하세요.</p>
+        <p>3. 신규 등록 시 상태는 자동으로 <strong>'대여가능'</strong>으로 설정됩니다.</p>
+      </div>
+    </section>
+  </div>
+</div>
+</body>
+</html>

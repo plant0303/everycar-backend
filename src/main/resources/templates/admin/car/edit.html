@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+  <title>회원 관리</title>
+  <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
+  <link rel="stylesheet" th:href="@{/css/car/admin-car.css}">
+</head>
+<body>
+<h2 layout:fragment="pageTitle">차량 관리</h2>
+<div layout:fragment="content" class="content-body">
+  <h2>차량 상세 정보 수정</h2>
+
+  <div class="edit-page-flex">
+    <section class="edit-form-section">
+      <form th:action="@{/admin/cars/update}" th:object="${car}" method="post">
+        <input type="hidden" th:field="*{carId}">
+
+        <div class="form-group">
+          <label>차량 관리 번호 (ID)</label>
+          <input type="text" th:field="*{carId}" disabled style="background:#eee;">
+        </div>
+
+        <div class="form-group">
+          <label>모델 정보</label>
+          <input type="text" th:value="|${car.modelBrand} ${car.modelName}|" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>차량 상태</label>
+          <select th:field="*{carStatus}">
+            <option value="0">대여 가능</option>
+            <option value="1">대여 중</option>
+            <option value="2">점검 중 (노출 정지)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>연식</label>
+          <input type="number" th:field="*{carYear}" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label>차량 등급</label>
+          <select th:field="*{carGrade}" class="form-control">
+            <option value="Premium">Premium</option>
+            <option value="Standard">Standard</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>배치 주차장 변경</label>
+          <select th:field="*{rentalStation}" class="form-control">
+            <option th:each="p : ${parkings}" th:value="${p.id}"
+                    th:text="${p.name}" th:selected="${p.id == car.rentalStation}"></option>
+          </select>
+        </div>
+        <div class="btn-area">
+          <button type="submit" class="btn btn-primary">정보 수정</button>
+          <a th:href="@{/admin/cars}" class="btn btn-secondary">목록으로</a>
+        </div>
+      </form>
+    </section>
+
+    <section class="reservation-list-section">
+      <div class="recent-reservations" style="margin-bottom: 40px;">
+        <h3>차량 이용 내역 (최근 순)</h3>
+        <div th:if="${#lists.isEmpty(reservationList)}" class="info-box">
+          이용 내역이 없습니다.
+        </div>
+
+        <table class="admin-table" style="font-size: 0.9em;" th:if="${!#lists.isEmpty(reservationList)}">
+          <thead>
+          <tr>
+            <th>사용자</th>
+            <th>대여일시</th>
+            <th>상태</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="res : ${reservationList}">
+            <td th:text="${res.userName}"></td>
+            <td>
+              <span th:text="${#strings.substring(res.rentalDate, 0, 16)}"></span>
+            </td>
+            <td>
+                      <span th:text="${res.status}"
+                            th:classappend="${res.status == '이용중'} ? 'text-danger fw-bold' : ''"></span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>차량 정보 삭제</h3>
+      <div style="padding: 20px; border: 1px solid #ffcdd2; background: #ffebee; border-radius: 5px;">
+        <p style="color: #c62828; font-weight: bold;">위험구역</p>
+        <p style="font-size: 0.9em; margin: 10px 0;">차량을 삭제하면 관련된 모든 예약 기록에 영향을 줄 수 있습니다.</p>
+
+        <form th:action="@{/admin/cars/delete/{id}(id=${car.carId})}" method="post"
+              onsubmit="return confirm('정말로 이 차량을 삭제하시겠습니까?');">
+          <button type="submit" class="btn" style="background: #e53935; color: white; width: 100%;">차량 영구 삭제</button>
+        </form>
+      </div>
+    </section>
+  </div>
+</div>
+</body>
+</html>

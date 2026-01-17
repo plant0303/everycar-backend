@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+  <title>차량 관리</title>
+  <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
+  <link rel="stylesheet" th:href="@{/css/car/admin-car.css}">
+</head>
+<body>
+<h2 layout:fragment="pageTitle">차량 관리</h2>
+<div layout:fragment="content" class="content-body">
+  <h2 layout:fragment="pageTitle">차량 보유 현황</h2>
+  <script th:if="${msg}">alert([[${msg}]]);</script>
+
+  <div class="search-filter-container">
+    <form th:action="@{/admin/cars}" method="get" class="flex-form">
+      <select name="status">
+        <option value="">전체상태</option>
+        <option value="0">대여가능</option>
+        <option value="1">대여중</option>
+        <option value="2">점검중</option>
+      </select>
+      <input type="text" name="keyword" th:value="${keyword}" placeholder="모델명 또는 브랜드 검색">
+      <button type="submit" class="btn btn-primary">검색</button>
+      <a th:href="@{/admin/cars/register}" class="btn btn-edit">차량 등록</a>
+    </form>
+  </div>
+
+  <table class="admin-table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>모델(브랜드)</th>
+      <th>연식</th>
+      <th>연료</th>
+      <th>대여지점</th>
+      <th>상태</th>
+      <th>관리</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="car : ${cars}">
+      <td th:text="${car.carId}"></td>
+      <td th:text="|${car.modelName} (${car.modelBrand})|"></td>
+      <td th:text="${car.carYear}"></td>
+      <td th:text="${car.carFuel}"></td>
+      <td th:text="${car.parkingName}"></td>
+      <td>
+                    <span th:class="|status-badge status-car-${car.carStatus}|"
+                          th:text="${car.carStatus == 0 ? '대여가능' : (car.carStatus == 1 ? '대여중' : '점검중')}"></span>
+      </td>
+      <td>
+        <a th:href="@{/admin/cars/edit/{id}(id=${car.carId})}" class="btn btn-edit">수정</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="pagination-container">
+    <div class="pagination">
+      <a th:href="@{/admin/cars(page=1, keyword=${keyword}, status=${status})}"
+         class="page-link" th:if="${currentPage > 1}">&laquo;&laquo;</a>
+
+      <a th:href="@{/admin/cars(page=${prevPage}, keyword=${keyword}, status=${status})}"
+         class="page-link" th:if="${hasPrev}">&laquo;</a>
+
+      <th:block th:each="i : ${#numbers.sequence(startPage, endPage > 0 ? endPage : 1)}">
+        <a th:href="@{/admin/cars(page=${i}, keyword=${keyword}, status=${status})}"
+           th:text="${i}"
+           class="page-link"
+           th:classappend="${i == currentPage} ? 'active'">
+        </a>
+      </th:block>
+
+      <a th:href="@{/admin/cars(page=${nextPage}, keyword=${keyword}, status=${status})}"
+         class="page-link" th:if="${hasNext}">&raquo;</a>
+
+      <a th:href="@{/admin/cars(page=${totalPages}, keyword=${keyword}, status=${status})}"
+         class="page-link" th:if="${currentPage < totalPages}">&raquo;&raquo;</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -83,6 +83,7 @@
 
 .form-group input[type="text"],
 .form-group input[type="email"],
+.form-group input[type="number"],
 .form-group select {
     width: 94%;
     padding: 10px 12px;
