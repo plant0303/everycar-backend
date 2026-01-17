@@ -6,7 +6,7 @@
         INSERT INTO reservations (
         payment_id,
         car_id,
-        user_num,
+        parking_id,  user_num,
         rental_date,
         return_date,
         total_price,
@@ -14,7 +14,7 @@
         ) VALUES (
         #{paymentId},
         #{carId},
-        #{userNum},
+        #{rentStation}, #{userNum},
         #{rentalDatetime},
         #{returnDatetime},
         #{totalPrice},
