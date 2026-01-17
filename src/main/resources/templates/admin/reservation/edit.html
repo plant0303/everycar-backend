@@ -67,6 +67,7 @@
                 </p>
                 <p><strong>대여 장소:</strong>
                     <span th:text="${res.parkingName}"></span>
+                    (<span th:text="${res.parkingAddress}"></span>)
                 </p>
                 <p><strong>예약 생성일:</strong>
                     <span th:text="${#temporals.format(res.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
