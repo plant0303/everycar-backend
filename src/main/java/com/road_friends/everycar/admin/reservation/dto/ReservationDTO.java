@@ -1,6 +1,7 @@
 package com.road_friends.everycar.admin.reservation.dto;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -9,8 +10,13 @@ public class ReservationDTO {
     // 예약 정보
     private Long reservationId;
     private String paymentId;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime rentalDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime returnDate;
+
     private Integer totalPrice;
     private String status;
     private LocalDateTime createdAt;
