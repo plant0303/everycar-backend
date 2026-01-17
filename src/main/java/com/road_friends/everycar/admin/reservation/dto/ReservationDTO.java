@@ -30,5 +30,8 @@ public class ReservationDTO {
     private Integer carId;
     private String modelName;   // model 테이블
     private String modelBrand;  // model 테이블
-    private String parkingName; // parking 테이블
+    private Integer parkingId;
+    private String parkingName;
+    private String parkingAddress;
+    private String parkingDistrict;
 }

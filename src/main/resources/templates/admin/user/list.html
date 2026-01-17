@@ -32,8 +32,8 @@
             <td th:text="${user.userId}"></td>
             <td th:text="${user.userName}"></td>
             <td>
-                    <span th:class="${user.userStatus == 1 ? 'status-badge status-active' : 'status-badge status-stop'}"
-                          th:text="${user.userStatus == 1 ? '정상' : '중지'}"></span>
+                    <span th:class="${user.userStatus == 0 ? 'status-badge status-active' : 'status-badge status-stop'}"
+                          th:text="${user.userStatus == 0 ? '정상' : '중지'}"></span>
             </td>
             <td>
                 <a th:href="@{/admin/users/edit/{id}(id=${user.userNum})}" class="btn btn-edit">수정</a>

@@ -10,4 +10,5 @@ public class PaymentCheckRequest {
     private Long userNum;
     private String rentalDatetime;
     private String returnDatetime;
+    private Integer rentStation;
 }

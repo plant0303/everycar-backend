@@ -21,11 +21,20 @@
     </select>
 
     <select id="findById" resultType="com.road_friends.everycar.admin.reservation.dto.ReservationDTO">
-        SELECT r.*, u.user_id, u.user_name, m.model_name
+        SELECT
+        r.*,
+        u.user_id,
+        u.user_name,
+        m.model_name,
+        m.model_brand,
+        p.parking_name,
+        p.parking_address,
+        p.parking_district
         FROM reservations r
         JOIN user u ON r.user_num = u.user_num
         JOIN car c ON r.car_id = c.car_id
         JOIN model m ON c.model_id = m.model_id
+        LEFT JOIN parking p ON r.parking_id = p.parking_id
         WHERE r.reservation_id = #{reservationId}
     </select>
 
