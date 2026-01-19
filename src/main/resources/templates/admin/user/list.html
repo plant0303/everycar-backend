@@ -3,12 +3,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/fragments/layout}">
 <head>
-    <title>회원 관리</title>
+    <title>에브리카 관리자 페이지 - 회원 관리</title>
     <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
 </head>
 <body>
 <h2 layout:fragment="pageTitle">회원 관리</h2>
 <div layout:fragment="content" class="content-body">
+    <h2>회원 목록</h2>
     <div class="search-area" style="margin-bottom: 20px;">
         <form th:action="@{/admin/users}" method="get">
             <input type="text" name="keyword" th:value="${keyword}" placeholder="아이디 검색">

@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/fragments/layout}">
 <head>
-  <title>회원 관리</title>
+  <title>에브리카 관리자 페이지 - 회원 관리</title>
   <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
   <link rel="stylesheet" th:href="@{/css/reservation/admin-reservation.css}">
 </head>
@@ -12,6 +12,7 @@
 <script th:if="${msg}">alert([[${msg}]]);</script>
 
 <section class="content-body" layout:fragment="content">
+  <h2>예약 목록</h2>
   <div class="search-filter-container" style="margin-bottom: 20px; display: flex; gap: 10px;">
     <form th:action="@{/admin/reservations}" method="get" style="display: flex; gap: 10px; width: 50%;">
       <select name="filterStatus" class="form-control" style="width: 150px;">

@@ -4,18 +4,18 @@
       layout:decorate="~{admin/fragments/layout}">
 
 <head>
-    <title>예약 수정</title>
+    <title>에브리카 관리자 페이지 - 예약 수정</title>
     <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
     <link rel="stylesheet" th:href="@{/css/reservation/admin-reservation.css}">
 </head>
 
 <body>
+<h2 layout:fragment="pageTitle">회원 관리</h2>
 <div layout:fragment="content" class="content-body">
-    <h2 layout:fragment="pageTitle" style="display:none;">예약 상세 수정</h2>
+    <h2 >예약 상세 수정</h2>
 
     <div class="edit-page-flex">
         <section class="edit-form-section">
-            <h3 style="margin-bottom: 20px;">예약 상태 수정</h3>
             <form th:action="@{/admin/reservations/update}" th:object="${res}" method="post">
                 <input type="hidden" th:field="*{reservationId}">
 

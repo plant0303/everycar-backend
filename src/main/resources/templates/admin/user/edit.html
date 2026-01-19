@@ -3,16 +3,15 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/fragments/layout}">
 <head>
-  <title>회원 정보 수정</title>
+  <title>에브리카 관리자 페이지 - 회원 정보 수정</title>
   <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
 </head>
 <body>
 <h2 layout:fragment="pageTitle">회원 상세 조회</h2>
 <div layout:fragment="content" class="content-body">
+  <h2>회원 정보 수정</h2>
   <div class="edit-page-flex">
-
     <section class="edit-form-section">
-      <h3 style="margin-bottom: 20px;">회원 정보 수정</h3>
       <form th:action="@{/admin/users/edit}" th:object="${user}" method="post">
         <input type="hidden" th:field="*{userNum}">
 
