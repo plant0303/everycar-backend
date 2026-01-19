@@ -6,13 +6,30 @@
   <title>차량 관리</title>
   <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
   <link rel="stylesheet" th:href="@{/css/car/admin-car.css}">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <h2 layout:fragment="pageTitle">차량 관리</h2>
 <div layout:fragment="content" class="content-body">
   <h2 layout:fragment="pageTitle">차량 보유 현황</h2>
-  <script th:if="${msg}">alert([[${msg}]]);</script>
+  <script th:if="${msg}">
+    alert([[${msg}]]);
+  </script>
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+        const message = [[${msg}]];
 
+        if (message) {
+            Swal.fire({
+                title: '완료!',
+                text: message,
+                icon: 'success', // 성공 아이콘 (체크 표시)
+                confirmButtonText: '확인',
+                confirmButtonColor: '#3498db'
+            });
+        }
+    /*]]>*/
+  </script>
   <div class="search-filter-container">
     <form th:action="@{/admin/cars}" method="get" class="flex-form">
       <select name="status">
@@ -22,7 +39,7 @@
         <option value="2">점검중</option>
       </select>
       <input type="text" name="keyword" th:value="${keyword}" placeholder="모델명 또는 브랜드 검색">
-      <button type="submit" class="btn btn-primary">검색</button>
+      <button type="submit" class="btn btn-primary" style="flex: none">검색</button>
       <a th:href="@{/admin/cars/register}" class="btn btn-edit">차량 등록</a>
     </form>
   </div>
@@ -40,7 +57,8 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="car : ${cars}">
+    <tr th:each="car : ${cars}"
+        th:style="${updatedId != null && car.carId == updatedId ? 'background-color: #fff9c4;' : ''}">
       <td th:text="${car.carId}"></td>
       <td th:text="|${car.modelName} (${car.modelBrand})|"></td>
       <td th:text="${car.carYear}"></td>

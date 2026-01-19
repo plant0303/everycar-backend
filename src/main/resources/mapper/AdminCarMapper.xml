@@ -48,7 +48,8 @@
         FROM reservations r
         JOIN user u ON r.user_num = u.user_num
         WHERE r.car_id = #{carId}
-        ORDER BY r.rental_date DESC  </select>
+        ORDER BY r.rental_date DESC
+    </select>
 
     <insert id="insertCar" parameterType="com.road_friends.everycar.admin.car.dto.CarAdminDTO">
         INSERT INTO car (
@@ -64,7 +65,6 @@
         UPDATE car SET
         car_status = #{carStatus},
         car_year = #{carYear},
-        car_fuel = #{carFuel},
         car_grade = #{carGrade},
         car_options = #{carOptions},
         rental_station = #{rentalStation}

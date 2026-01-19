@@ -61,6 +61,10 @@ public class AdminCarController {
     @PostMapping("/update")
     public String update(@ModelAttribute CarAdminDTO dto, RedirectAttributes ra) {
         carService.updateCar(dto);
+
+        String msg = String.format("[%s %s] 차량 정보가 성공적으로 수정되었습니다.",
+                dto.getModelBrand(), dto.getModelName());
+
         ra.addFlashAttribute("msg", "차량 정보가 수정되었습니다.");
         return "redirect:/admin/cars";
     }

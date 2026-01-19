@@ -6,6 +6,7 @@
   <title>회원 관리</title>
   <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
   <link rel="stylesheet" th:href="@{/css/car/admin-car.css}">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <h2 layout:fragment="pageTitle">차량 관리</h2>
@@ -14,7 +15,7 @@
 
   <div class="edit-page-flex">
     <section class="edit-form-section">
-      <form th:action="@{/admin/cars/update}" th:object="${car}" method="post">
+      <form th:action="@{/admin/cars/update}" th:object="${car}" id="editForm" method="post" onsubmit="return confirm('입력하신 정보로 차량 정보를 수정하시겠습니까?');">
         <input type="hidden" th:field="*{carId}">
 
         <div class="form-group">
@@ -51,14 +52,108 @@
 
         <div class="form-group">
           <label>배치 주차장 변경</label>
-          <select th:field="*{rentalStation}" class="form-control">
-            <option th:each="p : ${parkings}" th:value="${p.id}"
-                    th:text="${p.name}" th:selected="${p.id == car.rentalStation}"></option>
-          </select>
-        </div>
-        <div class="btn-area">
-          <button type="submit" class="btn btn-primary">정보 수정</button>
-          <a th:href="@{/admin/cars}" class="btn btn-secondary">목록으로</a>
+          <div class="search-select-wrapper">
+            <input type="text" id="parkingSearchInput" class="form-control"
+                   placeholder="주차장 이름을 입력하세요..."
+                   th:value="${car.parkingName}" autocomplete="off">
+
+            <input type="hidden" th:field="*{rentalStation}" id="rentalStationId">
+
+            <div id="parkingResultList" class="search-dropdown-list">
+              <div th:each="p : ${parkings}"
+                   class="result-item"
+                   th:data-id="${p.id}"
+                   th:data-name="${p.name}"
+                   th:text="${p.name}">
+              </div>
+              <div id="noResult" class="result-item" style="display: none; color: #999;">검색 결과가 없습니다.</div>
+            </div>
+          </div>
+          <div class="btn-area">
+            <button type="button" id="btnUpdate" class="btn btn-primary">정보 수정</button>
+            <a th:href="@{/admin/cars}" class="btn btn-secondary">목록으로</a>
+          </div>
+
+          <script th:inline="javascript">
+            (function() { // 즉시실행함수로 캡슐화
+              const searchInput = document.getElementById('parkingSearchInput');
+              const resultList = document.getElementById('parkingResultList');
+              const noResult = document.getElementById('noResult');
+              const items = resultList.getElementsByClassName('result-item');
+              const hiddenIdInput = document.getElementById('rentalStationId');
+
+              // 새로고침 방지
+              searchInput.addEventListener('keydown', function(e) {
+                  if (e.key === 'Enter') {
+                      e.preventDefault(); // 엔터 시 폼 제출(새로고침) 방지
+                      return false;
+                  }
+              });
+
+              // 입력창 클릭 시 목록 보여주기
+              searchInput.addEventListener('focus', function() {
+                  resultList.style.display = 'block';
+              });
+
+              // 검색어 입력 시 실시간 필터링 로직
+              searchInput.addEventListener('input', function() {
+                  const keyword = this.value.toLowerCase().trim();
+                  let visibleCount = 0;
+
+                  Array.from(items).forEach(item => {
+                      if (item.id === 'noResult') return;
+
+                      const name = item.getAttribute('data-name').toLowerCase();
+                      if (name.includes(keyword)) {
+                          item.style.display = 'block'; // class 대신 직접 style 제어 (안전함)
+                          visibleCount++;
+                      } else {
+                          item.style.display = 'none';
+                      }
+                  });
+
+                  noResult.style.display = (visibleCount === 0 && keyword !== '') ? 'block' : 'none';
+              });
+
+              // 목록에서 주차장 선택 시 (이벤트 위임 방식)
+              resultList.addEventListener('click', function(e) {
+                  const target = e.target;
+                  if (target.classList.contains('result-item') && target.id !== 'noResult') {
+                      const id = target.getAttribute('data-id');
+                      const name = target.getAttribute('data-name');
+
+                      hiddenIdInput.value = id;
+                      searchInput.value = name;
+                      resultList.style.display = 'none';
+                  }
+              });
+
+              // 외부 클릭 시 닫기
+              document.addEventListener('click', function(e) {
+                  if (!searchInput.contains(e.target) && !resultList.contains(e.target)) {
+                      resultList.style.display = 'none';
+                  }
+              });
+            })();
+
+            document.getElementById('btnUpdate').addEventListener('click', function() {
+              Swal.fire({
+                  title: '수정하시겠습니까?',
+                  text: "입력하신 정보가 시스템에 반영됩니다.",
+                  icon: 'question',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3498db',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: '수정',
+                  cancelButtonText: '취소'
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      // 사용자가 '수정'을 눌렀을 때만 폼 제출
+                      document.getElementById('editForm').submit();
+                  }
+              });
+          });
+          </script>
         </div>
       </form>
     </section>
