@@ -3,9 +3,10 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/fragments/layout}">
 <head>
-  <title>회원 관리</title>
+  <title>차량 관리</title>
   <link rel="stylesheet" th:href="@{/css/user/admin-user.css}">
   <link rel="stylesheet" th:href="@{/css/car/admin-car.css}">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <h2 layout:fragment="pageTitle">차량 신규 등록</h2>
@@ -14,20 +15,13 @@
 
   <div class="edit-page-flex">
     <section class="edit-form-section">
-      <form th:action="@{/admin/cars/register}" th:object="${car}" method="post">
+      <form id="registerForm" th:action="@{/admin/cars/register}" th:object="${car}" method="post">
         <div class="form-group">
-          <label>모델 ID (예: avante_cn7)</label>
-          <input type="text" th:field="*{modelId}" required>
-        </div>
-
-        <div class="form-group">
-          <label>차량 분류</label>
-          <select th:field="*{carCategory}">
-            <option value="1">경차</option>
-            <option value="2">준중형</option>
-            <option value="3">중형</option>
-            <option value="4">대형</option>
-            <option value="5">SUV</option>
+          <label>모델 선택</label>
+          <select th:field="*{modelId}" class="form-control" required>
+            <option value="">-- 모델을 선택하세요 --</option>
+            <option th:each="m : ${models}" th:value="${m.id}"
+                    th:text="|${m.brand} ${m.name}|"></option>
           </select>
         </div>
 
@@ -48,23 +42,155 @@
 
         <div class="form-group">
           <label>차량 등급</label>
-          <input type="text" th:field="*{carGrade}" placeholder="프레스티지, 노블레스 등">
+            <div class="radio-group">
+                <input type="radio" th:field="*{carGrade}" value="Premium" id="p">
+                <label for="p">Premium (풀옵션)</label>
+                <input type="radio" th:field="*{carGrade}" value="Standard" id="s">
+                <label for="s">Standard (기본옵션)</label>
+            </div>
         </div>
 
         <div class="form-group">
-          <label>옵션 정보</label>
-          <input type="text" th:field="*{carOptions}" placeholder="썬루프, 네비게이션 등">
-        </div>
+          <label>배치 주차장 변경</label>
+          <div class="search-select-wrapper">
+            <input type="text" id="parkingSearchInput" class="form-control"
+                   placeholder="주차장 이름을 입력하세요..."
+                   th:value="${car.parkingName}" autocomplete="off">
 
-        <div class="form-group">
-          <label>배치 주차장 ID (Parking ID)</label>
-          <input type="number" th:field="*{rentalStation}" required>
+            <input type="hidden" th:field="*{rentalStation}" id="rentalStationId">
+
+            <div id="parkingResultList" class="search-dropdown-list">
+              <div th:each="p : ${parkings}"
+                   class="result-item"
+                   th:data-id="${p.id}"
+                   th:data-name="${p.name}"
+                   th:text="${p.name}">
+              </div>
+              <div id="noResult" class="result-item" style="display: none; color: #999;">검색 결과가 없습니다.</div>
+            </div>
+          </div>
         </div>
 
         <div class="btn-area">
-          <button type="submit" class="btn btn-primary">차량 등록</button>
+          <button type="button" id="submitBtn" class="btn btn-primary">차량 등록</button>
           <a th:href="@{/admin/cars}" class="btn btn-secondary">취소</a>
         </div>
+
+          <script th:inline="javascript">
+            (function() {
+              const searchInput = document.getElementById('parkingSearchInput');
+              const resultList = document.getElementById('parkingResultList');
+              const noResult = document.getElementById('noResult');
+              const items = resultList.getElementsByClassName('result-item');
+              const hiddenIdInput = document.getElementById('rentalStationId');
+
+              // 새로고침 방지
+              searchInput.addEventListener('keydown', function(e) {
+                  if (e.key === 'Enter') {
+                      e.preventDefault(); // 엔터 시 폼 제출(새로고침) 방지
+                      return false;
+                  }
+              });
+
+              // 입력창 클릭 시 목록 보여주기
+              searchInput.addEventListener('focus', function() {
+                  resultList.style.display = 'block';
+              });
+
+              // 검색어 입력 시 실시간 필터링 로직
+              searchInput.addEventListener('input', function() {
+                  const keyword = this.value.toLowerCase().trim();
+                  let visibleCount = 0;
+
+                  Array.from(items).forEach(item => {
+                      if (item.id === 'noResult') return;
+
+                      const name = item.getAttribute('data-name').toLowerCase();
+                      if (name.includes(keyword)) {
+                          item.style.display = 'block'; // class 대신 직접 style 제어 (안전함)
+                          visibleCount++;
+                      } else {
+                          item.style.display = 'none';
+                      }
+                  });
+
+                  noResult.style.display = (visibleCount === 0 && keyword !== '') ? 'block' : 'none';
+              });
+
+              // 목록에서 주차장 선택 시 (이벤트 위임 방식)
+              resultList.addEventListener('click', function(e) {
+                  const target = e.target;
+                  if (target.classList.contains('result-item') && target.id !== 'noResult') {
+                      const id = target.getAttribute('data-id');
+                      const name = target.getAttribute('data-name');
+
+                      hiddenIdInput.value = id;
+                      searchInput.value = name;
+                      resultList.style.display = 'none';
+                  }
+              });
+
+              // 외부 클릭 시 닫기
+              document.addEventListener('click', function(e) {
+                  if (!searchInput.contains(e.target) && !resultList.contains(e.target)) {
+                      resultList.style.display = 'none';
+                  }
+              });
+            })();
+
+          document.getElementById('submitBtn').addEventListener('click', function(e) {
+            // 1. 포커스 해제 (접근성 경고 방지)
+            if (document.activeElement) document.activeElement.blur();
+
+            const form = document.getElementById('registerForm');
+
+            // 2. 값 추출
+            const modelId = form.querySelector('select[name="modelId"]').value;
+            const carYear = form.querySelector('input[name="carYear"]').value;
+            const carGradeRadio = form.querySelector('input[name="carGrade"]:checked');
+            const rentalStation = document.getElementById('rentalStationId').value;
+            const parkingSearchInput = document.getElementById('parkingSearchInput').value;
+
+            // 3. 유효성 검사 (실패 시 return을 통해 함수 종료)
+            if (!modelId) {
+                Swal.fire({ icon: 'warning', title: '입력 오류', text: '차량 모델을 선택해주세요.' });
+                return;
+            }
+
+            const currentYear = new Date().getFullYear();
+            if (!carYear || carYear < 2020 || carYear > currentYear + 1) {
+                Swal.fire({ icon: 'warning', title: '입력 오류', text: '2020년 이후의 올바른 연식을 입력해주세요.' });
+                return;
+            }
+
+            if (!carGradeRadio) {
+                Swal.fire({ icon: 'warning', title: '입력 오류', text: '차량 등급을 선택해주세요.' });
+                return;
+            }
+
+            if (!rentalStation || !parkingSearchInput) {
+                Swal.fire({ icon: 'warning', title: '입력 누락', text: '주차장을 검색하여 목록에서 선택해주세요.' });
+                return;
+            }
+
+            // 4. 모든 검사 통과 시 최종 확인 모달
+            Swal.fire({
+                title: '차량을 등록하시겠습니까?',
+                text: "입력하신 정보가 시스템에 저장됩니다.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3498db',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '등록',
+                cancelButtonText: '취소',
+                stopKeydownPropagation: false // aria-hidden 경고 방지 보조
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // 수동 제출
+                }
+            });
+        });
+          </script>
       </form>
     </section>
 

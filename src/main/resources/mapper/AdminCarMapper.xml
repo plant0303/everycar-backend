@@ -56,7 +56,7 @@
         model_id, car_category, car_status, car_year,
         car_fuel, car_grade, car_options, rental_station
         ) VALUES (
-        #{modelId}, #{carCategory}, 0, #{carYear},
+        #{modelId}, 0, 0, #{carYear},
         #{carFuel}, #{carGrade}, #{carOptions}, #{rentalStation}
         )
     </insert>

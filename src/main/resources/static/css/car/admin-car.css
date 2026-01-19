@@ -119,3 +119,76 @@ select.form-control {
 .is-hidden {
     display: none !important;
 }
+
+/* option */
+/* 셀렉트 박스 전용 (커스텀 화살표 추가 가능) */
+select.form-control {
+    appearance: none; /* 브라우저 기본 화살표 제거 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 35px; /* 화살표와 텍스트 겹침 방지 */
+    cursor: pointer;
+}
+
+/* 포커스 되었을 때 효과 */
+/* 라벨 텍스트 스타일 */
+.form-group > label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 700;
+    color: #333;
+}
+
+/* 라디오 그룹 컨테이너 */
+.radio-group {
+    display: flex;
+    gap: 15px; /* 버튼 사이 간격 */
+}
+
+/* 실제 라디오 인풋은 숨김 */
+.radio-group input[type="radio"] {
+    display: none;
+}
+
+/* 라디오 버튼용 라벨 (버튼 디자인) */
+.radio-group label {
+    flex: 1; /* 가로 길이를 동일하게 */
+    padding: 12px 20px;
+    text-align: center;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* 마우스를 올렸을 때 */
+.radio-group label:hover {
+    border-color: #3498db;
+    background-color: #f7fbff;
+}
+
+/* 라디오 버튼이 체크되었을 때의 라벨 스타일 (핵심) */
+.radio-group input[type="radio"]:checked + label {
+    border-color: #3498db;
+    background-color: #ebf5ff;
+    color: #1976d2;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+}
+
+/* Premium 전용 강조색 (선택사항) */
+.radio-group input[id="p"]:checked + label {
+    border-color: #f1c40f; /* 금색 계열 */
+    background-color: #fffef0;
+    color: #9a7d0a;
+}
