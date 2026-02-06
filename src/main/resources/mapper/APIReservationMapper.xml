@@ -66,7 +66,6 @@
     <select id="getAmountHour" >
         SELECT m.model_amount_hour
         FROM car c
-        JOIN model m ON c.model_id = m.model_id  -- 차량 모델 정보 조회
         WHERE car_id=#{carId};
     </select>
 
