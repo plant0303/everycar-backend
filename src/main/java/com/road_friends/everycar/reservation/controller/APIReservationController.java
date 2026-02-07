@@ -9,7 +9,6 @@ import org.springframework.boot.context.config.ConfigDataResourceNotFoundExcepti
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -71,9 +70,11 @@ public class APIReservationController {
     public ResponseEntity<APIReservationDTO> getContractDetails(
             @RequestParam("carId") int carId,
             @RequestParam("userNum") Long userNum,
-            @RequestParam("parkingId") int parkingId) {
+            @RequestParam("parkingId") int parkingId,
+            @RequestParam("rentalDatetime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rentalDatetime,
+            @RequestParam("returnDatetime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime returnDatetime) {
 
-        APIReservationDTO details = APIReservationService.getContractDetails(carId, userNum, parkingId);
+        APIReservationDTO details = APIReservationService.getContractDetails(carId, userNum, parkingId, rentalDatetime, returnDatetime);
         return ResponseEntity.ok(details);
     }
     // 예약 생성
