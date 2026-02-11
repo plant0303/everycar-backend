@@ -5,7 +5,8 @@ import com.road_friends.everycar.mypage.dto.UserLicenseDTO;
 import com.road_friends.everycar.mypage.service.MypageUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,7 +18,7 @@ public class MypageUserController {
 
     // 회원 정보 및 면허 정보 조회
     @GetMapping("/{userNum}")
-    public ResponseEntity<UserDTO> getUserInfo(@PathVariable Long userNum) {
+    public ResponseEntity<UserDTO> getUserInfo(@PathVariable Long userNum, @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(mypageUserService.getUserByNum(userNum));
     }
 

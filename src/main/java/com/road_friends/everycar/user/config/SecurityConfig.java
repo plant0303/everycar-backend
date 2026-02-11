@@ -1,5 +1,6 @@
 package com.road_friends.everycar.user.config;
 
+import com.road_friends.everycar.user.filter.JwtAuthenticationFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,12 +8,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Slf4j
 @Configuration
@@ -20,50 +26,76 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(UserDetailsService userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsService = userDetailsService;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        log.info("security config ...");
 
         http
-                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+
+                .addFilterBefore(
+                        jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                )
+
                 .authorizeHttpRequests(authorize -> authorize
+                        // 정적 리소스
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/admin/login", "/admin").permitAll()
+
+                        // 공개 API
+                        .requestMatchers(
+                                "/api/reservation/**",
+                                "/api/parking/**",
+                                "/api/login",
+                                "/api/signup"
+                        ).permitAll()
+
+                        // 로그인 필수 페이지
+                        .requestMatchers("/api/mypage/**", "/api/reservation/complete", "api/reservation/contract-details").authenticated()
+
+                        // 관리자
+                        .requestMatchers("/admin/login").permitAll()
                         .requestMatchers("/admin/user/{id}").hasRole("ADMIN")
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "MANAGER")
+
                         .anyRequest().authenticated()
-//                        .anyRequest().permitAll()
                 )
+
                 .formLogin(formLogin -> formLogin
                         .loginPage("/admin/login")
-                        .usernameParameter("userId")
-                        .passwordParameter("userPassword")
-                        .defaultSuccessUrl("/admin/users", true)
                         .permitAll()
                 )
-                .sessionManagement(session -> session
-                        // 로그인 중복방지, 세션 저장
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 필요시 세션 생성
-                        .invalidSessionUrl("/admin/login") // 세션 만료 시 이동할 페이지
-                        .maximumSessions(1) // 중복 로그인 방지
-                )
+
                 .logout(logout -> logout
-                        .logoutUrl("/admin/logout") // 로그아웃 처리 경로
-                        .logoutSuccessUrl("/admin/login") // 성공 시 이동할 경로
-                        .invalidateHttpSession(true) // 세션 삭제
-                        .deleteCookies("JSESSIONID") // 쿠키 삭제
+                        .logoutUrl("/admin/logout")
+                        .logoutSuccessUrl("/admin/login")
                 );
 
         return http.build();
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 프론트 주소
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
 
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
