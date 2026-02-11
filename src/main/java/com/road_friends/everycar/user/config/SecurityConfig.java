@@ -1,6 +1,7 @@
 package com.road_friends.everycar.user.config;
 
 import com.road_friends.everycar.user.filter.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,6 +48,14 @@ public class SecurityConfig {
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 )
+                .exceptionHandling(exception -> exception
+                        // 인증되지 않은 사용자가 /api/** 요청 시 리다이렉트 대신 401 반환
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\": \"Unauthorized\"}");
+                        })
+                )
 
                 .authorizeHttpRequests(authorize -> authorize
                         // 정적 리소스
@@ -57,7 +66,8 @@ public class SecurityConfig {
                                 "/api/reservation/**",
                                 "/api/parking/**",
                                 "/api/login",
-                                "/api/signup"
+                                "/api/signup",
+                                "/api/refresh"
                         ).permitAll()
 
                         // 로그인 필수 페이지
