@@ -3,17 +3,12 @@ package com.road_friends.everycar.payment.service;
 import com.road_friends.everycar.payment.dto.PaymentCheckRequest;
 import com.road_friends.everycar.payment.dto.PortOneTokenResponse;
 import com.road_friends.everycar.payment.mapper.ReservationMapper;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +26,7 @@ public class PaymentService {
     @Value("${portone.api.secret}")
     private String apiSecret;
 
+    @Transactional
     public boolean verifyAndSaveReservation(PaymentCheckRequest request) throws Exception {
         // 1. 포트원 Access Token 발급
         String accessToken = getPortOneToken();

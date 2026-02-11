@@ -5,14 +5,12 @@ import com.road_friends.everycar.user.dto.RoleDTO;
 import com.road_friends.everycar.user.dto.UserDTO;
 import com.road_friends.everycar.user.mapper.APIUserMapper;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +24,8 @@ public class APIUserService {
     private final APIUserMapper APIUserMapper;
     private final JwtUtil jwtUtil;
 
-    // 일반 회원가입
+    // 일반 회원가입.
+    @Transactional
     public void signup(UserDTO userDTO) {
         String rawPw = userDTO.getUserPassword();
         String encodedPw = passwordEncoder.encode(rawPw);
@@ -48,6 +47,7 @@ public class APIUserService {
         return APIUserMapper.findByUsername(userId);
     }
 
+    @Transactional
     public Map<String, String> login(String userId, String password) {
         UserDTO user = APIUserMapper.findByUsername(userId);
 

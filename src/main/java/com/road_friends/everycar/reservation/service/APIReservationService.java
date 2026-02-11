@@ -36,8 +36,6 @@ public class APIReservationService {
             } else {
             }
         }
-
-
         return availableCars;
     }
 
@@ -91,6 +89,7 @@ public class APIReservationService {
         return totalPrice;
     }
 
+    @Transactional(readOnly = true)
     public Map<String, Object> getCarInfo(int carId, LocalDateTime startTime, LocalDateTime endTime) {
         // 1. Join 쿼리 한 번으로 모든 정보(가격 포함)를 가져옵니다.
         CarDTO car = APIReservationMapper.getCarById(carId);
@@ -104,6 +103,7 @@ public class APIReservationService {
 
         return carDetail;
     }
+
     public CarDTO getCarById(int carId) {
         return APIReservationMapper.getCarById(carId);
     }
@@ -117,6 +117,7 @@ public class APIReservationService {
     }
 
     // 결제페이지
+    @Transactional(readOnly = true)
     public APIReservationDTO getContractDetails(int carId, Long userNum, int parkingId,  LocalDateTime startTime, LocalDateTime endTime) {
         APIReservationDTO dto = APIReservationMapper.findContractDetails(carId, userNum, parkingId);
 

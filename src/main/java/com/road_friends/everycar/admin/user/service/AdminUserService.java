@@ -16,6 +16,7 @@ import java.util.Map;
 public class AdminUserService {
     private final AdminUserMapper adminUserMapper;
 
+    @Transactional(readOnly = true)
     public Map<String, Object> getUserList(String keyword, int page) {
         int size = 10; // 페이지당 출력 개수
         int offset = (page - 1) * size;
