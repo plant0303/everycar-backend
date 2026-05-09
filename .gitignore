@@ -39,3 +39,5 @@ out/
 # DB 설정 및 민감 정보 파일 제외
 src/main/resources/application.properties
 *.jar
+CLAUDE.md
+GEMINI.md
