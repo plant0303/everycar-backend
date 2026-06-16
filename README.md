@@ -1,7 +1,8 @@
 # Everycar - 렌터카 예약 웹 서비스
-
+<img width="1616" height="621" alt="Image" src="https://github.com/user-attachments/assets/1e761298-5a4d-42bd-aa75-4be6d6468415" />
 > K-디지털트레이닝 과정 팀 프로젝트 | 11인 팀 | 팀장
 
+개발 과정 기록 노션 : https://app.notion.com/p/IT-1598a693d9d4826b8d998130928c3937
 <br>
 
 ## 프로젝트 소개
@@ -16,6 +17,20 @@
 | 담당 역할 | 팀장, 백엔드, 프론트 |
 | 개발 기간 | 24.11 ~ 25.04 |
 
+### 주요 기능
+
+<img width="627" height="362" alt="Image" src="https://github.com/user-attachments/assets/329c0da5-eefa-45f1-99f5-1b89beca737c" />
+
+렌트카 대여 가능 주차장 검색
+kakao map api 와 date-fns 캘린더 라이브러리를 커스텀해 시각적인 예약 검색 환경 구성
+
+<img width="647" height="410" alt="Image" src="https://github.com/user-attachments/assets/a6bbaa0d-193f-4615-bbd8-24046a931dd6" />
+
+대여 가능 차량 목록 조회
+
+<img width="300" alt="Image" src="https://github.com/user-attachments/assets/60b46fde-1a5a-42da-9e98-a3dfa8604be0" />
+
+모바일 전용 대응 화면
 <br>
 
 ## 기술 스택
